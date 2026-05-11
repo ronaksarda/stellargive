@@ -2,15 +2,17 @@
 name = "stellar-give"
 version = "0.1.0"
 edition = "2021"
+license = "MIT"
+publish = false
 
 [lib]
 crate-type = ["cdylib"]
 
 [dependencies]
-soroban-sdk = "20.0.0"
+soroban-sdk = "21.7.7"
 
 [dev-dependencies]
-soroban-sdk = { version = "20.0.0", features = ["testutils"] }
+soroban-sdk = { version = "21.7.7", features = ["testutils"] }
 
 [profile.release]
 opt-level = "z"
@@ -19,3 +21,5 @@ debug = false
 panic = "abort"
 incremental = false
 codegen-units = 1
+lto = true
+strip = "symbols"

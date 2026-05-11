@@ -1,0 +1,38 @@
+name: Contract CI
+
+on:
+  push:
+    paths:
+      - "contracts/stellar-give/**"
+      - ".github/workflows/ci.yml"
+  pull_request:
+    paths:
+      - "contracts/stellar-give/**"
+      - ".github/workflows/ci.yml"
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: contracts/stellar-give
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+
+      - name: Cache cargo
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: contracts/stellar-give
+
+      - name: Run tests
+        run: cargo test --locked
+
+      - name: Build wasm
+        run: cargo build --locked --target wasm32-unknown-unknown --release
