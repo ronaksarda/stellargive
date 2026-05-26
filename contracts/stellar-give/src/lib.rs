@@ -147,7 +147,6 @@ fn update_top_donors(env: &Env, campaign_id: u64, donor: &Address, amount: i128)
 
 fn enter_lock(env: &Env) -> Result<(), ContractError> {
     let key = lock_key();
-    // Temporary lock prevents re-entrant state changes in the same execution context.
     if env.storage().temporary().get::<_, bool>(&key).unwrap_or(false) {
         return Err(ContractError::ReentrancyDetected);
     }
@@ -155,6 +154,8 @@ fn enter_lock(env: &Env) -> Result<(), ContractError> {
     Ok(())
 }
 
+/// Releases the reentrancy lock unconditionally.  Called on every exit path
+/// (success and failure) to guarantee the lock is not left held.
 fn exit_lock(env: &Env) {
     env.storage().temporary().remove(&lock_key());
 }
@@ -184,12 +185,18 @@ fn sync_status(env: &Env, campaign: &mut Campaign) {
     }
 }
 
+/// Validates that `token_address` implements the Soroban Asset Contract (SEP-41)
+/// interface by calling two lightweight read methods.  Returns `InvalidToken`
+/// if either call fails, preventing campaigns from being created with
+/// non-compliant or malicious token contracts.
 fn validate_token_contract(env: &Env, token_address: &Address) -> Result<(), ContractError> {
-    // Validate token interface by calling a standard SEP-41 read method.
-    if token::TokenClient::new(env, token_address)
-        .try_decimals()
-        .is_err()
-    {
+    let client = token::TokenClient::new(env, token_address);
+    // Both calls must succeed — a malicious contract that panics on either
+    // will cause this to return InvalidToken.
+    if client.try_decimals().is_err() {
+        return Err(ContractError::InvalidToken);
+    }
+    if client.try_symbol().is_err() {
         return Err(ContractError::InvalidToken);
     }
     Ok(())
@@ -251,12 +258,31 @@ impl StellarGiveContract {
             (symbol_short!("created"),),
             CreatedEvent {
                 id,
-                creator,
-                target_amount: campaign.target_amount,
-            },
-        );
+                creator: creator.clone(),
+                beneficiary: beneficiary.clone(),
+                title,
+                target_amount,
+                raised_amount: 0,
+                deadline,
+                accepted_token: accepted_token.clone(),
+                status: CampaignStatus::Active,
+            };
 
-        Ok(id)
+            write_campaign(&env, &campaign);
+            env.events().publish(
+                (symbol_short!("created"),),
+                CreatedEvent {
+                    id,
+                    creator,
+                    target_amount: campaign.target_amount,
+                },
+            );
+
+            Ok(id)
+        })();
+
+        exit_lock(&env);
+        result
     }
 
     pub fn donate(
@@ -279,11 +305,14 @@ impl StellarGiveContract {
                 return Err(ContractError::CampaignNotActive);
             }
 
-            token::TokenClient::new(&env, &campaign.accepted_token).transfer(
-                &donor,
-                &env.current_contract_address(),
-                &amount,
-            );
+            // Use try_transfer so a failing token contract reverts the donation
+            // cleanly instead of propagating a raw panic.
+            if token::TokenClient::new(&env, &campaign.accepted_token)
+                .try_transfer(&donor, &env.current_contract_address(), &amount)
+                .is_err()
+            {
+                return Err(ContractError::TokenTransferFailed);
+            }
 
             campaign.raised_amount = campaign
                 .raised_amount
