@@ -122,9 +122,12 @@
                   "string": "Flood Relief"
                 },
                 {
+                  "string": "https://example.com/meta"
+                },
+                {
                   "i128": {
                     "hi": 0,
-                    "lo": 5000000
+                    "lo": 10000000
                   }
                 },
                 {
@@ -133,6 +136,7 @@
                 {
                   "address": "CACMVW2KK4H5FZDFF2AUCAKQTEJMZZWJUIZF23XMRVYQBSXYLHZ6BKWN"
                 },
+                "void",
                 "void",
                 "void"
               ]
@@ -467,6 +471,20 @@
                     },
                     {
                       "key": {
+                        "symbol": "max_per_donor"
+                      },
+                      "val": "void"
+                    },
+                    {
+                      "key": {
+                        "symbol": "metadata_uri"
+                      },
+                      "val": {
+                        "string": "https://example.com/meta"
+                      }
+                    },
+                    {
+                      "key": {
                         "symbol": "raised_amount"
                       },
                       "val": {
@@ -495,7 +513,7 @@
                       "val": {
                         "i128": {
                           "hi": 0,
-                          "lo": 5000000
+                          "lo": 10000000
                         }
                       }
                     },
@@ -1237,9 +1255,12 @@
                   "string": "Flood Relief"
                 },
                 {
+                  "string": "https://example.com/meta"
+                },
+                {
                   "i128": {
                     "hi": 0,
-                    "lo": 5000000
+                    "lo": 10000000
                   }
                 },
                 {
@@ -1248,6 +1269,7 @@
                 {
                   "address": "CACMVW2KK4H5FZDFF2AUCAKQTEJMZZWJUIZF23XMRVYQBSXYLHZ6BKWN"
                 },
+                "void",
                 "void",
                 "void"
               ]
@@ -1388,7 +1410,7 @@
                   "val": {
                     "i128": {
                       "hi": 0,
-                      "lo": 5000000
+                      "lo": 10000000
                     }
                   }
                 }
