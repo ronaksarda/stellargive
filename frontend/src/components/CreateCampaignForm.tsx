@@ -64,6 +64,8 @@ const NATIVE_XLM = "CDLZS3ZCDY7SF3SIVR6Y7I6SN636O27T7G5MKSUIU22ZS76E55WJIPZ4";
 
 export function CreateCampaignForm() {
   const [isOpen, setIsOpen] = useState(false);
+  const [selectedFileName, setSelectedFileName] = useState("");
+  const [uploadError, setUploadError] = useState("");
   const createCampaign = useCreateCampaign();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -81,6 +83,7 @@ export function CreateCampaignForm() {
   });
 
   const watchAcceptedToken = form.watch("acceptedToken");
+  const metadataUri = form.watch("metadataUri");
   const selectedTokenMeta = PREDEFINED_TOKENS.find(t => t.address === watchAcceptedToken);
   const tokenSymbol = selectedTokenMeta ? selectedTokenMeta.symbol : "Tokens";
 
@@ -106,6 +109,25 @@ export function CreateCampaignForm() {
       // but we catch it here to prevent uncaught promise rejections.
       console.error(e);
     }
+  }
+
+  function onImageSelected(file: File | null) {
+    setUploadError("");
+    if (!file) {
+      setSelectedFileName("");
+      form.setValue("metadataUri", "");
+      return;
+    }
+    const isImage = file.type === "image/png" || file.type === "image/jpeg" || file.type === "image/jpg";
+    if (!isImage) {
+      setUploadError("Only PNG or JPG images are allowed.");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setUploadError("Image must be 5MB or less.");
+      return;
+    }
+    setSelectedFileName(file.name);
   }
 
   return (
@@ -202,6 +224,34 @@ export function CreateCampaignForm() {
                 )}
               />
             </div>
+            <FormField
+              control={form.control}
+              name="metadataUri"
+              render={() => (
+                <FormItem>
+                  <FormLabel>Campaign Cover Image (Optional)</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="file"
+                      accept="image/png,image/jpeg"
+                      disabled={createCampaign.isPending}
+                      onChange={(event) => onImageSelected(event.target.files?.[0] ?? null)}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    Upload PNG/JPG image up to 5MB. This will be stored on IPFS.
+                  </FormDescription>
+                  {selectedFileName && !uploadError && (
+                    <p className="text-xs text-muted-foreground">Selected: {selectedFileName}</p>
+                  )}
+                  {!!metadataUri && !uploadError && (
+                    <p className="text-xs text-muted-foreground break-all">CID: {metadataUri}</p>
+                  )}
+                  {!!uploadError && <p className="text-xs text-destructive">{uploadError}</p>}
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <FormField
               control={form.control}
               name="website"
