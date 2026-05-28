@@ -57,6 +57,9 @@ export function RecentDonations({ campaignId }: { campaignId: bigint }) {
   const formatDonor = (donor: any) => {
     if (!donor) return "Anonymous";
     const str = donor.toString();
+    if (str === "GAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWHF") {
+      return "Anonymous";
+    }
     if (str.length === 56 && str.startsWith("G")) {
       return `${str.substring(0, 4)}...${str.substring(52)}`;
     }

@@ -39,6 +39,8 @@ pub struct Campaign {
     pub accepted_token: Address,
     pub status: CampaignStatus,
     pub max_per_donor: Option<i128>,
+    pub website: Option<String>,
+    pub twitter: Option<String>,
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -61,6 +63,11 @@ pub enum ContractError {
     NotInitialized = 14,
     AlreadyInitialized = 15,
     InvalidDuration = 16,
+    TargetTooLow = 17,
+    ExceedsDonorCap = 18,
+    InvalidMetadataUri = 19,
+    MetadataUriTooLong = 20,
+    InvalidUrl = 21,
 }
 
 fn next_id_key() -> Symbol {
@@ -255,6 +262,20 @@ fn sync_status(env: &Env, campaign: &mut Campaign) {
 /// by calling two lightweight read methods. Returns `InvalidToken` if either
 /// call fails, preventing campaigns from being created with non-compliant or
 /// malicious token contracts.
+fn validate_url(url: &String) -> Result<(), ContractError> {
+    let len = url.len() as usize;
+    if len < 8 || len > 200 {
+        return Err(ContractError::InvalidUrl);
+    }
+    let mut buf = [0u8; 200];
+    let dest_slice = &mut buf[0..len];
+    url.copy_into_slice(dest_slice);
+    if &dest_slice[0..8] != b"https://" {
+        return Err(ContractError::InvalidUrl);
+    }
+    Ok(())
+}
+
 fn validate_token_contract(env: &Env, token_address: &Address) -> Result<(), ContractError> {
     let client = token::Client::new(env, token_address);
     if client.try_decimals().is_err() {
@@ -302,6 +323,8 @@ impl StellarGiveContract {
         deadline: u64,
         accepted_token: Address,
         max_per_donor: Option<i128>,
+        website: Option<String>,
+        twitter: Option<String>,
     ) -> Result<u64, ContractError> {
         creator.require_auth();
 
@@ -313,6 +336,13 @@ impl StellarGiveContract {
         }
         if metadata_uri.len() > 256 {
             return Err(ContractError::MetadataUriTooLong);
+        }
+
+        if let Some(ref url) = website {
+            validate_url(url)?;
+        }
+        if let Some(ref url) = twitter {
+            validate_url(url)?;
         }
 
         let mut is_valid = false;
@@ -369,6 +399,8 @@ impl StellarGiveContract {
             accepted_token: accepted_token.clone(),
             status: CampaignStatus::Active,
             max_per_donor,
+            website,
+            twitter,
         };
 
         write_campaign(&env, &campaign);
@@ -394,6 +426,7 @@ impl StellarGiveContract {
         donor: Address,
         campaign_id: u64,
         amount: i128,
+        is_anonymous: bool,
     ) -> Result<(), ContractError> {
         donor.require_auth();
         if amount < MIN_DONATION {
@@ -446,12 +479,22 @@ impl StellarGiveContract {
             };
 
             write_campaign(&env, &campaign);
-            update_top_donors(&env, campaign_id, &donor, amount);
+
+            let event_donor = if is_anonymous {
+                Address::from_string(&String::from_str(
+                    &env,
+                    "GAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWHF",
+                ))
+            } else {
+                donor.clone()
+            };
+
+            update_top_donors(&env, campaign_id, &event_donor, amount);
             env.events().publish(
                 (symbol_short!("donation"), symbol_short!("received")),
                 (
                     campaign.id,
-                    donor,
+                    event_donor,
                     amount,
                     campaign.raised_amount,
                     campaign.accepted_token.clone(),
@@ -650,9 +693,12 @@ mod tests {
             &creator,
             &bens,
             &String::from_str(&env, "Flood Relief"),
-            &5_000_000,
+            &String::from_str(&env, "https://example.com/meta"),
+            &10_000_000,
             &2_000,
             &token_client.address,
+            &None,
+            &None,
             &None,
         );
 
@@ -661,13 +707,15 @@ mod tests {
         assert_eq!(campaign.status, CampaignStatus::Active);
         assert_eq!(campaign.creator, creator);
         assert_eq!(campaign.beneficiaries, bens);
-        assert_eq!(campaign.target_amount, 5_000_000);
+        assert_eq!(campaign.target_amount, 10_000_000);
         assert_eq!(campaign.raised_amount, 0);
         assert_eq!(
             campaign.metadata_uri,
             String::from_str(&env, "https://example.com/meta")
         );
         assert_eq!(campaign.max_per_donor, None);
+        assert_eq!(campaign.website, None);
+        assert_eq!(campaign.twitter, None);
     }
 
     #[test]
@@ -675,7 +723,7 @@ mod tests {
         let (env, client, creator, beneficiary, _donor, _admin, token_client, _) = setup();
         set_timestamp(&env, 1_000);
 
-        let target_amount: i128 = 5_000_000;
+        let target_amount: i128 = 10_000_000;
         let bens = single_ben(&env, &beneficiary);
         let id = client.create_campaign(
             &creator,
@@ -685,6 +733,8 @@ mod tests {
             &target_amount,
             &2_000,
             &token_client.address,
+            &None,
+            &None,
             &None,
         );
 
@@ -720,9 +770,12 @@ mod tests {
             &creator,
             &bens,
             &String::from_str(&env, "One Year Relief"),
-            &5_000_000,
+            &String::from_str(&env, "https://example.com/meta"),
+            &10_000_000,
             &(1_000 + MAX_DURATION),
             &token_client.address,
+            &None,
+            &None,
             &None,
         );
         assert_eq!(id, 1);
@@ -732,9 +785,12 @@ mod tests {
             &creator,
             &bens,
             &String::from_str(&env, "Too Long Relief"),
-            &5_000_000,
+            &String::from_str(&env, "https://example.com/meta"),
+            &10_000_000,
             &(1_000 + MAX_DURATION + 1),
             &token_client.address,
+            &None,
+            &None,
             &None,
         );
         assert!(result.is_err());
@@ -750,14 +806,17 @@ mod tests {
         set_timestamp(&env, 1_000);
 
         let bens = single_ben(&env, &beneficiary);
-        // token_client.address is a registered SAC — validation must succeed.
         let result = client.try_create_campaign(
             &creator,
             &bens,
             &String::from_str(&env, "SAC Campaign"),
-            &5_000_000,
+            &String::from_str(&env, "https://example.com/meta"),
+            &10_000_000,
             &2_000,
             &token_client.address,
+            &None,
+            &None,
+            &None,
         );
         assert!(result.is_ok(), "valid SAC token must be accepted");
     }
@@ -767,8 +826,6 @@ mod tests {
         let (env, client, creator, beneficiary, _donor, _admin, _token_client, _) = setup();
         set_timestamp(&env, 1_000);
 
-        // Use the campaign contract's own address as the token — it does not
-        // implement decimals() or symbol(), so validation must return InvalidToken.
         let not_a_token = client.address.clone();
         let bens = single_ben(&env, &beneficiary);
 
@@ -776,11 +833,18 @@ mod tests {
             &creator,
             &bens,
             &String::from_str(&env, "Bad Token Campaign"),
-            &5_000_000,
+            &String::from_str(&env, "https://example.com/meta"),
+            &10_000_000,
             &2_000,
             &not_a_token,
+            &None,
+            &None,
+            &None,
         );
-        assert!(result.is_err(), "non-token contract address must be rejected");
+        assert!(
+            result.is_err(),
+            "non-token contract address must be rejected"
+        );
     }
 
     // -----------------------------------------------------------------------
@@ -797,20 +861,23 @@ mod tests {
             &creator,
             &bens,
             &String::from_str(&env, "Medical Aid"),
-            &3_000_000,
+            &String::from_str(&env, "https://example.com/meta"),
+            &10_000_000,
             &10_000,
             &token_client.address,
             &None,
+            &None,
+            &None,
         );
 
-        client.donate(&donor, &campaign_id, &1_000_000);
+        client.donate(&donor, &campaign_id, &3_000_000, &false);
         let after_first = client.get_campaign(&campaign_id);
-        assert_eq!(after_first.raised_amount, 1_000_000);
+        assert_eq!(after_first.raised_amount, 3_000_000);
         assert_eq!(after_first.status, CampaignStatus::Active);
 
-        client.donate(&donor, &campaign_id, &2_000_000);
+        client.donate(&donor, &campaign_id, &7_000_000, &false);
         let after_second = client.get_campaign(&campaign_id);
-        assert_eq!(after_second.raised_amount, 3_000_000);
+        assert_eq!(after_second.raised_amount, 10_000_000);
         assert_eq!(after_second.status, CampaignStatus::Funded);
     }
 
@@ -824,13 +891,16 @@ mod tests {
             &creator,
             &bens,
             &String::from_str(&env, "Seed Relief"),
-            &5_000_000,
+            &String::from_str(&env, "https://example.com/meta"),
+            &10_000_000,
             &10_000,
             &token_client.address,
             &None,
+            &None,
+            &None,
         );
 
-        let result = client.try_donate(&donor, &campaign_id, &(MIN_DONATION - 1));
+        let result = client.try_donate(&donor, &campaign_id, &(MIN_DONATION - 1), &false);
         assert!(result.is_err());
     }
 
@@ -848,13 +918,16 @@ mod tests {
             &creator,
             &bens,
             &String::from_str(&env, "School Rebuild"),
+            &String::from_str(&env, "https://example.com/meta"),
             &12_000_000,
             &20_000,
             &token_client.address,
             &None,
+            &None,
+            &None,
         );
 
-        client.donate(&donor, &campaign_id, &12_000_000);
+        client.donate(&donor, &campaign_id, &12_000_000, &false);
 
         let ben_before = token_client.balance(&beneficiary);
         let admin_before = token_client.balance(&admin);
@@ -863,7 +936,6 @@ mod tests {
         let admin_after = token_client.balance(&admin);
         let campaign = client.get_campaign(&campaign_id);
 
-        // fee = round_half_up(12_000_000 * 100 / 10_000) = 120_000; net = 11_880_000
         assert_eq!(claimed, 12_000_000);
         assert_eq!(ben_after - ben_before, 11_880_000);
         assert_eq!(admin_after - admin_before, 120_000);
@@ -881,13 +953,16 @@ mod tests {
             &creator,
             &bens,
             &String::from_str(&env, "Emergency Shelter"),
+            &String::from_str(&env, "https://example.com/meta"),
             &50_000_000,
             &500,
             &token_client.address,
             &None,
+            &None,
+            &None,
         );
 
-        client.donate(&donor, &campaign_id, &5_000_000);
+        client.donate(&donor, &campaign_id, &5_000_000, &false);
         set_timestamp(&env, 600);
 
         let claimed = client.claim_funds(&beneficiary, &campaign_id);
@@ -907,12 +982,15 @@ mod tests {
             &creator,
             &bens,
             &String::from_str(&env, "Food Support"),
-            &5_000_000,
+            &String::from_str(&env, "https://example.com/meta"),
+            &10_000_000,
             &1_000,
             &token_client.address,
             &None,
+            &None,
+            &None,
         );
-        client.donate(&donor, &campaign_id, &1_000_000);
+        client.donate(&donor, &campaign_id, &1_000_000, &false);
         set_timestamp(&env, 1_100);
 
         let attacker = Address::generate(&env);
@@ -938,13 +1016,16 @@ mod tests {
             &creator,
             &bens,
             &String::from_str(&env, "Dual Relief"),
+            &String::from_str(&env, "https://example.com/meta"),
             &20_000_000,
             &2_000,
             &token_client.address,
             &None,
+            &None,
+            &None,
         );
 
-        client.donate(&donor, &campaign_id, &20_000_000);
+        client.donate(&donor, &campaign_id, &20_000_000, &false);
 
         let b1_before = token_client.balance(&beneficiary);
         let b2_before = token_client.balance(&beneficiary2);
@@ -952,16 +1033,10 @@ mod tests {
         let b1_after = token_client.balance(&beneficiary);
         let b2_after = token_client.balance(&beneficiary2);
 
-        // gross=20_000_000; fee=200_000; net=19_800_000
-        // b2 (5000bps): 19_800_000 * 5000 / 10_000 = 9_900_000
-        // b1 (remainder): 19_800_000 - 9_900_000 = 9_900_000
         assert_eq!(claimed, 20_000_000);
         assert_eq!(b2_after - b2_before, 9_900_000);
         assert_eq!(b1_after - b1_before, 9_900_000);
-        assert_eq!(
-            (b1_after - b1_before) + (b2_after - b2_before),
-            19_800_000
-        );
+        assert_eq!((b1_after - b1_before) + (b2_after - b2_before), 19_800_000);
         assert_eq!(
             client.get_campaign(&campaign_id).status,
             CampaignStatus::Claimed
@@ -980,18 +1055,20 @@ mod tests {
         bens.push_back((beneficiary2.clone(), 3_333_u32));
         bens.push_back((beneficiary3.clone(), 3_333_u32));
 
-        let amount = 10_000_000; // use MIN_TARGET to be safe
         let campaign_id = client.create_campaign(
             &creator,
             &bens,
             &String::from_str(&env, "Three Way"),
+            &String::from_str(&env, "https://example.com/meta"),
             &10_000_000,
             &2_000,
             &token_client.address,
             &None,
+            &None,
+            &None,
         );
 
-        client.donate(&donor, &campaign_id, &10_000_000);
+        client.donate(&donor, &campaign_id, &10_000_000, &false);
 
         let b1_before = token_client.balance(&beneficiary);
         let b2_before = token_client.balance(&beneficiary2);
@@ -1001,10 +1078,6 @@ mod tests {
         let b2_after = token_client.balance(&beneficiary2);
         let b3_after = token_client.balance(&beneficiary3);
 
-        // gross=10_000_000; fee=100_000; net=9_900_000
-        // b2 (3333bps): floor(9_900_000 * 3333 / 10_000) = 3_299_670
-        // b3 (3333bps): 3_299_670
-        // b1 (3334bps, remainder): 9_900_000 - 3_299_670 - 3_299_670 = 3_300_660
         assert_eq!(claimed, 10_000_000);
         let b2_delta = b2_after - b2_before;
         let b3_delta = b3_after - b3_before;
@@ -1029,9 +1102,12 @@ mod tests {
             &creator,
             &bens,
             &String::from_str(&env, "Bad Shares"),
-            &5_000_000,
+            &String::from_str(&env, "https://example.com/meta"),
+            &10_000_000,
             &2_000,
             &token_client.address,
+            &None,
+            &None,
             &None,
         );
         assert!(result.is_err());
@@ -1047,9 +1123,12 @@ mod tests {
             &creator,
             &bens,
             &String::from_str(&env, "No Bens"),
-            &5_000_000,
+            &String::from_str(&env, "https://example.com/meta"),
+            &10_000_000,
             &2_000,
             &token_client.address,
+            &None,
+            &None,
             &None,
         );
         assert!(result.is_err());
@@ -1071,9 +1150,13 @@ mod tests {
                 &creator,
                 &bens,
                 &String::from_str(&env, "Bench"),
-                &1_000_000,
+                &String::from_str(&env, "https://example.com/meta"),
+                &10_000_000,
                 &2_000,
                 &token_client.address,
+                &None,
+                &None,
+                &None,
             );
             assert_eq!(id, expected_id);
         }
@@ -1092,14 +1175,17 @@ mod tests {
             &creator,
             &bens,
             &String::from_str(&env, "Top Donors"),
+            &String::from_str(&env, "https://example.com/meta"),
             &20_000_000,
             &2_000,
             &token_client.address,
             &None,
+            &None,
+            &None,
         );
 
-        client.donate(&donor, &campaign_id, &1_000_000);
-        client.donate(&donor, &campaign_id, &5_000_000);
+        client.donate(&donor, &campaign_id, &1_000_000, &false);
+        client.donate(&donor, &campaign_id, &5_000_000, &false);
 
         let top = client.get_top_donors(&campaign_id);
         assert_eq!(top.len(), 1);
@@ -1158,26 +1244,28 @@ mod tests {
         let (env, client, creator, beneficiary, donor, admin, token_client, _) = setup();
         set_timestamp(&env, 10_000);
 
-        // 1_000_000 gross; fee = 1% = 10_000; net = 990_000
         let bens = single_ben(&env, &beneficiary);
         let campaign_id = client.create_campaign(
             &creator,
             &bens,
             &String::from_str(&env, "Fee Test"),
-            &1_000_000,
+            &String::from_str(&env, "https://example.com/meta"),
+            &10_000_000,
             &20_000,
             &token_client.address,
             &None,
+            &None,
+            &None,
         );
-        client.donate(&donor, &campaign_id, &1_000_000);
+        client.donate(&donor, &campaign_id, &10_000_000, &false);
 
         let ben_before = token_client.balance(&beneficiary);
         let admin_before = token_client.balance(&admin);
         let claimed = client.claim_funds(&beneficiary, &campaign_id);
 
-        assert_eq!(claimed, 1_000_000);
-        assert_eq!(token_client.balance(&admin) - admin_before, 10_000);
-        assert_eq!(token_client.balance(&beneficiary) - ben_before, 990_000);
+        assert_eq!(claimed, 10_000_000);
+        assert_eq!(token_client.balance(&admin) - admin_before, 100_000);
+        assert_eq!(token_client.balance(&beneficiary) - ben_before, 9_900_000);
     }
 
     #[test]
@@ -1191,11 +1279,15 @@ mod tests {
             &creator,
             &bens,
             &String::from_str(&env, "Property"),
+            &String::from_str(&env, "https://example.com/meta"),
             &gross,
             &20_000,
             &token_client.address,
+            &None,
+            &None,
+            &None,
         );
-        client.donate(&donor, &campaign_id, &gross);
+        client.donate(&donor, &campaign_id, &gross, &false);
 
         let ben_before = token_client.balance(&beneficiary);
         let admin_before = token_client.balance(&admin);
@@ -1226,7 +1318,6 @@ mod tests {
         let token_admin_client = token::StellarAssetClient::new(&env, &token_id.address());
         token_admin_client.mint(&donor, &100_000_000_000);
 
-        // Do NOT call initialize — admin must not be set.
         let contract_id = env.register_contract(None, StellarGiveContract);
         let client = StellarGiveContractClient::new(&env, &contract_id);
 
@@ -1237,12 +1328,15 @@ mod tests {
             &creator,
             &bens,
             &String::from_str(&env, "Uninit"),
-            &1_000_000,
+            &String::from_str(&env, "https://example.com/meta"),
+            &10_000_000,
             &5_000,
             &token_client.address,
             &None,
+            &None,
+            &None,
         );
-        client.donate(&donor, &campaign_id, &1_000_000);
+        client.donate(&donor, &campaign_id, &10_000_000, &false);
 
         let result = client.try_claim_funds(&creator, &campaign_id);
         assert!(
@@ -1261,15 +1355,278 @@ mod tests {
             result.is_err(),
             "initialize must reject a second call once admin is set"
         );
+    }
+
+    #[test]
+    fn create_campaign_rejects_sub_minimum_target() {
+        let (env, client, creator, beneficiary, _donor, _admin, token_client, _) = setup();
+        set_timestamp(&env, 1_000);
+
+        let mut bens = Vec::new(&env);
+        bens.push_back((beneficiary.clone(), 10_000_u32));
+
+        let result = client.try_create_campaign(
+            &creator,
+            &bens,
+            &String::from_str(&env, "Too Low"),
+            &String::from_str(&env, "https://example.com/meta"),
+            &(MIN_TARGET - 1),
+            &2_000,
+            &token_client.address,
+            &None,
+            &None,
+            &None,
+        );
+        assert_eq!(result, Err(Ok(ContractError::TargetTooLow)));
+    }
+
+    #[test]
+    fn create_campaign_validates_metadata_uri() {
+        let (env, client, creator, beneficiary, _donor, _admin, token_client, _) = setup();
+        set_timestamp(&env, 1_000);
+        let mut bens = Vec::new(&env);
+        bens.push_back((beneficiary.clone(), 10_000_u32));
+
+        // Invalid prefix
+        let result = client.try_create_campaign(
+            &creator,
+            &bens,
+            &String::from_str(&env, "Invalid Prefix"),
+            &String::from_str(&env, "ftp://example.com"),
+            &MIN_TARGET,
+            &2_000,
+            &token_client.address,
+            &None,
+            &None,
+            &None,
+        );
+        assert_eq!(result, Err(Ok(ContractError::InvalidMetadataUri)));
+
+        // Too long
+        let mut long_uri_bytes = [b'a'; 260];
+        long_uri_bytes[0..8].copy_from_slice(b"https://");
+        let long_uri_str = core::str::from_utf8(&long_uri_bytes).unwrap();
+        let result = client.try_create_campaign(
+            &creator,
+            &bens,
+            &String::from_str(&env, "Too Long"),
+            &String::from_str(&env, long_uri_str),
+            &MIN_TARGET,
+            &2_000,
+            &token_client.address,
+            &None,
+            &None,
+            &None,
+        );
+        assert_eq!(result, Err(Ok(ContractError::MetadataUriTooLong)));
+    }
+
+    #[test]
+    fn donate_enforces_donor_cap() {
+        let (env, client, creator, beneficiary, donor, _admin, token_client, _) = setup();
+        set_timestamp(&env, 1_000);
+
+        let mut bens = Vec::new(&env);
+        bens.push_back((beneficiary.clone(), 10_000_u32));
+
+        let cap = 50_000_000;
+        let campaign_id = client.create_campaign(
+            &creator,
+            &bens,
+            &String::from_str(&env, "Capped"),
+            &String::from_str(&env, "https://example.com/meta"),
+            &100_000_000,
+            &2_000,
+            &token_client.address,
+            &Some(cap),
+            &None,
+            &None,
+        );
 
         // First donation within cap
-        client.donate(&donor, &campaign_id, &30_000_000);
+        client.donate(&donor, &campaign_id, &30_000_000, &false);
 
         // Second donation exceeding cap
-        let result = client.try_donate(&donor, &campaign_id, &30_000_000);
+        let result = client.try_donate(&donor, &campaign_id, &30_000_000, &false);
         assert_eq!(result, Err(Ok(ContractError::ExceedsDonorCap)));
 
         // Second donation exactly at cap
-        client.donate(&donor, &campaign_id, &20_000_000);
+        client.donate(&donor, &campaign_id, &20_000_000, &false);
+    }
+
+    #[test]
+    fn donate_anonymous_emits_masked_event_and_transfers_funds() {
+        let (env, client, creator, beneficiary, donor, _admin, token_client, _) = setup();
+        set_timestamp(&env, 5_000);
+
+        let bens = single_ben(&env, &beneficiary);
+        let campaign_id = client.create_campaign(
+            &creator,
+            &bens,
+            &String::from_str(&env, "Medical Aid"),
+            &String::from_str(&env, "https://example.com/meta"),
+            &10_000_000,
+            &10_000,
+            &token_client.address,
+            &None,
+            &None,
+            &None,
+        );
+
+        let before_bal = token_client.balance(&donor);
+        client.donate(&donor, &campaign_id, &1_000_000, &true);
+        let after_bal = token_client.balance(&donor);
+
+        // Funds must be debited correctly from the donor's address.
+        assert_eq!(before_bal - after_bal, 1_000_000);
+
+        let after_donate = client.get_campaign(&campaign_id);
+        assert_eq!(after_donate.raised_amount, 1_000_000);
+
+        // Verify the emitted event uses the masked address.
+        let event = env
+            .events()
+            .all()
+            .iter()
+            .find(|(addr, topics, _)| {
+                addr == &client.address
+                    && topics
+                        .get(0)
+                        .and_then(|t| Symbol::try_from_val(&env, &t).ok())
+                        == Some(symbol_short!("donation"))
+            })
+            .expect("Donation event was not emitted");
+
+        let payload: (u64, Address, i128, i128, Address) =
+            TryFromVal::try_from_val(&env, &event.2).expect("failed to decode event payload");
+
+        assert_eq!(payload.0, campaign_id);
+        assert_eq!(
+            payload.1,
+            Address::from_string(&String::from_str(
+                &env,
+                "GAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWHF"
+            ))
+        );
+        assert_eq!(payload.2, 1_000_000);
+        assert_eq!(payload.3, 1_000_000);
+        assert_eq!(payload.4, token_client.address);
+
+        // Top donors should also show the masked zero address instead of real donor.
+        let top = client.get_top_donors(&campaign_id);
+        assert_eq!(top.len(), 1);
+        assert_eq!(
+            top.get(0).unwrap().0,
+            Address::from_string(&String::from_str(
+                &env,
+                "GAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWHF"
+            ))
+        );
+    }
+
+    #[test]
+    fn donate_non_anonymous_emits_real_address() {
+        let (env, client, creator, beneficiary, donor, _admin, token_client, _) = setup();
+        set_timestamp(&env, 5_000);
+
+        let bens = single_ben(&env, &beneficiary);
+        let campaign_id = client.create_campaign(
+            &creator,
+            &bens,
+            &String::from_str(&env, "Medical Aid"),
+            &String::from_str(&env, "https://example.com/meta"),
+            &10_000_000,
+            &10_000,
+            &token_client.address,
+            &None,
+            &None,
+            &None,
+        );
+
+        client.donate(&donor, &campaign_id, &1_000_000, &false);
+
+        let event = env
+            .events()
+            .all()
+            .iter()
+            .find(|(addr, topics, _)| {
+                addr == &client.address
+                    && topics
+                        .get(0)
+                        .and_then(|t| Symbol::try_from_val(&env, &t).ok())
+                        == Some(symbol_short!("donation"))
+            })
+            .expect("Donation event was not emitted");
+
+        let payload: (u64, Address, i128, i128, Address) =
+            TryFromVal::try_from_val(&env, &event.2).expect("failed to decode event payload");
+
+        assert_eq!(payload.0, campaign_id);
+        assert_eq!(payload.1, donor);
+        assert_eq!(payload.2, 1_000_000);
+
+        // Top donors should show the real address.
+        let top = client.get_top_donors(&campaign_id);
+        assert_eq!(top.len(), 1);
+        assert_eq!(top.get(0).unwrap().0, donor);
+    }
+
+    #[test]
+    fn create_campaign_validates_social_links() {
+        let (env, client, creator, beneficiary, _donor, _admin, token_client, _) = setup();
+        set_timestamp(&env, 1_000);
+
+        let bens = single_ben(&env, &beneficiary);
+
+        // Valid https links are accepted
+        let result_ok = client.try_create_campaign(
+            &creator,
+            &bens,
+            &String::from_str(&env, "Valid Links Campaign"),
+            &String::from_str(&env, "https://example.com/meta"),
+            &10_000_000,
+            &2_000,
+            &token_client.address,
+            &None,
+            &Some(String::from_str(&env, "https://mywebsite.com")),
+            &Some(String::from_str(&env, "https://twitter.com/myhandle")),
+        );
+        assert!(
+            result_ok.is_ok(),
+            "valid https social links must be accepted"
+        );
+
+        // Invalid website link (non-https) is rejected
+        let result_err_web = client.try_create_campaign(
+            &creator,
+            &bens,
+            &String::from_str(&env, "Invalid Link Campaign"),
+            &String::from_str(&env, "https://example.com/meta"),
+            &10_000_000,
+            &2_000,
+            &token_client.address,
+            &None,
+            &Some(String::from_str(&env, "http://mywebsite.com")),
+            &None,
+        );
+        assert!(
+            result_err_web.is_err(),
+            "non-https website must be rejected"
+        );
+
+        // Invalid twitter link (non-https) is rejected
+        let result_err_tw = client.try_create_campaign(
+            &creator,
+            &bens,
+            &String::from_str(&env, "Invalid Link Campaign"),
+            &String::from_str(&env, "https://example.com/meta"),
+            &10_000_000,
+            &2_000,
+            &token_client.address,
+            &None,
+            &None,
+            &Some(String::from_str(&env, "twitter.com/myhandle")),
+        );
+        assert!(result_err_tw.is_err(), "non-https twitter must be rejected");
     }
 }

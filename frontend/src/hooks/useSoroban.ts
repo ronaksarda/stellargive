@@ -40,6 +40,8 @@ export function useCreateCampaign() {
       targetAmount: string;
       deadline: number;
       acceptedToken: string;
+      website?: string;
+      twitter?: string;
     }) => {
       if (!address) throw new Error("Wallet not connected");
 
@@ -50,6 +52,8 @@ export function useCreateCampaign() {
         nativeToScVal(toStroops(params.targetAmount), { type: "i128" }),
         nativeToScVal(BigInt(params.deadline), { type: "u64" }),
         new Address(params.acceptedToken).toScVal(),
+        nativeToScVal(params.website || null, { type: "string" }),
+        nativeToScVal(params.twitter || null, { type: "string" }),
       ];
 
       return submitTransaction(address, "create_campaign", args);
@@ -81,13 +85,14 @@ export function useDonate() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (params: { campaignId: bigint; amount: string }) => {
+    mutationFn: async (params: { campaignId: bigint; amount: string; isAnonymous: boolean }) => {
       if (!address) throw new Error("Wallet not connected");
 
       const args = [
         new Address(address).toScVal(),
         nativeToScVal(params.campaignId, { type: "u64" }),
         nativeToScVal(toStroops(params.amount), { type: "i128" }),
+        nativeToScVal(params.isAnonymous, { type: "bool" }),
       ];
 
       return submitTransaction(address, "donate", args);

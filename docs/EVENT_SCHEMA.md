@@ -121,7 +121,7 @@ an envelope pulled from `getEvents` on Soroban RPC.
 | Index | Name             | Rust type | ScVal encoding                              | Notes                                          |
 | ----- | ---------------- | --------- | ------------------------------------------- | ---------------------------------------------- |
 | `0`   | `campaign_id`    | `u64`     | `ScVal::U64(u64)`                           | Matches `CreatedEvent.id`.                     |
-| `1`   | `donor`          | `Address` | `ScVal::Address(ScAddress)`                 | Account or contract that funded the donation.  |
+| `1`   | `donor`          | `Address` | `ScVal::Address(ScAddress)`                 | Account or contract that funded the donation. If `is_anonymous` was set to `true`, this is set to the zero address (`GAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWHF`). |
 | `2`   | `amount`         | `i128`    | `ScVal::I128(Int128Parts)`                  | Token amount donated in this call.             |
 | `3`   | `raised_amount`  | `i128`    | `ScVal::I128(Int128Parts)`                  | New running total **after** this donation. Use this to detect "goal reached" when `raised_amount >= target_amount`. |
 | `4`   | `accepted_token` | `Address` | `ScVal::Address(ScAddress)`                 | SAC contract id of the donation token.         |

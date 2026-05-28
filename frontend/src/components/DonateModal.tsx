@@ -19,6 +19,7 @@ import { Loader2 } from "lucide-react";
 
 export function DonateModal({ campaign }: { campaign: Campaign }) {
   const [amount, setAmount] = useState("");
+  const [isAnonymous, setIsAnonymous] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const donate = useDonate();
 
@@ -32,9 +33,11 @@ export function DonateModal({ campaign }: { campaign: Campaign }) {
       await donate.mutateAsync({
         campaignId: campaign.id,
         amount,
+        isAnonymous,
       });
       setIsOpen(false);
       setAmount("");
+      setIsAnonymous(false);
     } catch (e: any) {
       // Errors are already handled by sonner inside useDonate mutation wrapper
       console.error(e);
@@ -72,6 +75,24 @@ export function DonateModal({ campaign }: { campaign: Campaign }) {
               onChange={(e) => setAmount(e.target.value)}
               disabled={donate.isPending}
             />
+          </div>
+          <div className="grid gap-1">
+            <div className="flex items-center space-x-2 pt-2">
+              <input
+                id="anonymous"
+                type="checkbox"
+                checked={isAnonymous}
+                onChange={(e) => setIsAnonymous(e.target.checked)}
+                disabled={donate.isPending}
+                className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary accent-primary cursor-pointer"
+              />
+              <Label htmlFor="anonymous" className="cursor-pointer select-none text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                Donate anonymously
+              </Label>
+            </div>
+            <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
+              Hides your address in the public event feed and leaderboard. Ledger records will still show the transfer.
+            </p>
           </div>
         </div>
         <DialogFooter>

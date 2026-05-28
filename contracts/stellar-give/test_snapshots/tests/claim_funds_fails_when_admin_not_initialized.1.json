@@ -38,7 +38,7 @@
                 {
                   "i128": {
                     "hi": 0,
-                    "lo": 1000000000
+                    "lo": 100000000000
                   }
                 }
               ]
@@ -92,6 +92,8 @@
                 {
                   "address": "CDLDVFKHEZ2RVB3NG4UQA4VPD3TSHV6XMHXMHP2BSGCJ2IIWVTOHGDSG"
                 },
+                "void",
+                "void",
                 "void"
               ]
             }
@@ -120,6 +122,9 @@
                     "hi": 0,
                     "lo": 10000000
                   }
+                },
+                {
+                  "bool": false
                 }
               ]
             }
@@ -467,6 +472,18 @@
                       "val": {
                         "string": "Uninit"
                       }
+                    },
+                    {
+                      "key": {
+                        "symbol": "twitter"
+                      },
+                      "val": "void"
+                    },
+                    {
+                      "key": {
+                        "symbol": "website"
+                      },
+                      "val": "void"
                     }
                   ]
                 }
@@ -675,7 +692,7 @@
                       "val": {
                         "i128": {
                           "hi": 0,
-                          "lo": 990000000
+                          "lo": 99990000000
                         }
                       }
                     },
@@ -1059,7 +1076,7 @@
                 {
                   "i128": {
                     "hi": 0,
-                    "lo": 1000000000
+                    "lo": 100000000000
                   }
                 }
               ]
@@ -1093,7 +1110,7 @@
             "data": {
               "i128": {
                 "hi": 0,
-                "lo": 1000000000
+                "lo": 100000000000
               }
             }
           }
@@ -1177,6 +1194,8 @@
                 {
                   "address": "CDLDVFKHEZ2RVB3NG4UQA4VPD3TSHV6XMHXMHP2BSGCJ2IIWVTOHGDSG"
                 },
+                "void",
+                "void",
                 "void"
               ]
             }
@@ -1381,6 +1400,9 @@
                     "hi": 0,
                     "lo": 10000000
                   }
+                },
+                {
+                  "bool": false
                 }
               ]
             }

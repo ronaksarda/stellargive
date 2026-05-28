@@ -27,6 +27,8 @@ pub fn create_campaign(
     target_amount: i128,
     deadline: u64,
     accepted_token: Address,
+    website: Option<String>,
+    twitter: Option<String>,
 ) -> Result<u64, ContractError>
 ```
 
@@ -39,6 +41,11 @@ Arguments
 - `target_amount` - Funding goal in stroops.
 - `deadline` - Unix timestamp after which new donations are no longer accepted.
 - `accepted_token` - Address of a Soroban token contract that must implement the token interface.
+- `website` - Optional website URL. If provided, must start with `https://`.
+- `twitter` - Optional Twitter link. If provided, must start with `https://`.
+
+> [!WARNING]
+> **No ownership verification:** The contract only validates that the URLs start with `https://` to encourage secure links. There is no on-chain cryptographic verification of ownership. These links are informational only.
 
 Returns
 
@@ -77,6 +84,7 @@ pub fn donate(
     donor: Address,
     campaign_id: u64,
     amount: i128,
+    is_anonymous: bool,
 ) -> Result<(), ContractError>
 ```
 
@@ -86,6 +94,10 @@ Arguments
 - `donor` - Authorized donor address. Must call `require_auth()`.
 - `campaign_id` - ID of the campaign to donate to.
 - `amount` - Donation amount in stroops.
+- `is_anonymous` - If `true`, masks the donor address in emitted events and top donor listings with the zero address (`GAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWHF`).
+
+> [!NOTE]
+> **Privacy Trade-offs:** On-chain ledger transfers remain public. The underlying token contract still records a transfer originating from the donor's address. `is_anonymous` only masks application-level events and dashboard displays.
 
 Returns
 
