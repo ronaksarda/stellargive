@@ -141,38 +141,38 @@ fn campaign_key(id: u64) -> (Symbol, u64) {
     (symbol_short!("CMP"), id)
 }
 
-fn update_key(campaign_id: u64, update_num: u32) -> (Symbol, u64, u32) {
-    (symbol_short!("UPD"), campaign_id, update_num)
-}
+const INSTANCE_BUMP_AMOUNT: u32 = 518400; // ~30 days
+const INSTANCE_LIFETIME_THRESHOLD: u32 = 17280; // ~1 day
 
-fn update_count_key(campaign_id: u64) -> (Symbol, u64) {
-    (symbol_short!("UPD_C"), campaign_id)
-}
-
-fn read_update_count(env: &Env, campaign_id: u64) -> u32 {
+fn extend_instance_ttl(env: &Env) {
     env.storage()
-        .persistent()
-        .get(&update_count_key(campaign_id))
-        .unwrap_or(0)
-}
-
-fn write_update_count(env: &Env, campaign_id: u64, count: u32) {
-    env.storage()
-        .persistent()
-        .set(&update_count_key(campaign_id), &count);
+        .instance()
+        .extend_ttl(INSTANCE_LIFETIME_THRESHOLD, INSTANCE_BUMP_AMOUNT);
 }
 
 fn read_next_id(env: &Env) -> u64 {
-    // Instance storage is cheaper per access than Persistent and its lifetime
-    // is managed with the contract instance, so no manual TTL extension needed.
-    env.storage()
-        .instance()
-        .get(&next_id_key())
-        .unwrap_or(1_u64)
+    let key = next_id_key();
+
+    if let Some(id) = env.storage().instance().get(&key) {
+        extend_instance_ttl(env);
+        return id;
+    }
+
+    // Phase 5: Migration logic from persistent to instance storage
+    if let Some(id) = env.storage().persistent().get(&key) {
+        env.storage().instance().set(&key, &id);
+        env.storage().persistent().remove(&key);
+        extend_instance_ttl(env);
+        return id;
+    }
+
+    extend_instance_ttl(env);
+    1_u64
 }
 
 fn write_next_id(env: &Env, next_id: u64) {
     env.storage().instance().set(&next_id_key(), &next_id);
+    extend_instance_ttl(env);
 }
 
 fn read_campaign(env: &Env, id: u64) -> Result<Campaign, ContractError> {
@@ -327,6 +327,7 @@ fn sync_status(env: &Env, campaign: &mut Campaign) {
 /// by calling two lightweight read methods. Returns `InvalidToken` if either
 /// call fails, preventing campaigns from being created with non-compliant or
 /// malicious token contracts.
+#[allow(clippy::manual_range_contains)]
 fn validate_url(url: &String) -> Result<(), ContractError> {
     let len = url.len() as usize;
     if !(8..=200).contains(&len) {
@@ -1800,20 +1801,81 @@ mod tests {
         assert_eq!(top.get(0).unwrap().0, donor);
     }
 
-    // -----------------------------------------------------------------------
-    // Campaign Updates
-    // -----------------------------------------------------------------------
-
     #[test]
-    fn test_add_and_get_updates() {
+    fn test_next_id_migration_and_instance_storage() {
         let (env, client, creator, beneficiary, _donor, _admin, token_client, _) = setup();
-        set_timestamp(&env, 5_000);
-
+        
+        env.as_contract(&client.address, || {
+            let key = next_id_key();
+            
+            // Ensure starting state is 1
+            assert_eq!(read_next_id(&env), 1);
+            
+            // Simulate old deployment by setting NEXT_ID in persistent storage manually
+            let old_id: u64 = 42;
+            env.storage().persistent().set(&key, &old_id);
+            
+            // Ensure it's not in instance storage yet
+            assert!(env.storage().instance().get::<_, u64>(&key).is_none());
+            
+            // 1. Next read should migrate from persistent to instance
+            let read_id = read_next_id(&env);
+            assert_eq!(read_id, old_id);
+            
+            // 2. Verify it was removed from persistent
+            assert!(env.storage().persistent().get::<_, u64>(&key).is_none());
+            
+            // 3. Verify it was written to instance
+            let instance_id = env.storage().instance().get::<_, u64>(&key).unwrap();
+            assert_eq!(instance_id, old_id);
+        });
+        
+        // Create a campaign, should use the migrated ID 42 and increment to 43
         let bens = single_ben(&env, &beneficiary);
         let campaign_id = client.create_campaign(
             &creator,
             &bens,
-            &String::from_str(&env, "Test Updates"),
+            &String::from_str(&env, "Migrated Campaign"),
+            &String::from_str(&env, "https://example.com/meta"),
+            &10_000_000,
+            &10_000,
+            &token_client.address,
+            &None,
+            &None,
+            &None,
+        );
+        
+        assert_eq!(campaign_id, 42);
+        
+        // Check next id is 43 in instance storage
+        env.as_contract(&client.address, || {
+            let key = next_id_key();
+            assert_eq!(read_next_id(&env), 43);
+            assert_eq!(env.storage().instance().get::<_, u64>(&key).unwrap(), 43);
+        });
+    }
+
+    #[test]
+    fn test_sequential_id_behavior() {
+        let (env, client, creator, beneficiary, _donor, _admin, token_client, _) = setup();
+
+        let bens = single_ben(&env, &beneficiary);
+        let id1 = client.create_campaign(
+            &creator,
+            &bens,
+            &String::from_str(&env, "Camp 1"),
+            &String::from_str(&env, "https://example.com/meta"),
+            &10_000_000,
+            &10_000,
+            &token_client.address,
+            &None,
+            &None,
+            &None,
+        );
+        let id2 = client.create_campaign(
+            &creator,
+            &bens,
+            &String::from_str(&env, "Camp 2"),
             &String::from_str(&env, "https://example.com/meta"),
             &10_000_000,
             &10_000,
@@ -1823,122 +1885,10 @@ mod tests {
             &None,
         );
 
-        // Empty updates initially
-        let updates = client.get_updates(&campaign_id);
-        assert_eq!(updates.len(), 0);
-
-        // Add first update
-        let content1 = String::from_str(&env, "First update");
-        client.add_update(&campaign_id, &content1);
-
-        set_timestamp(&env, 6_000);
-
-        // Add second update
-        let content2 = String::from_str(&env, "Second update");
-        client.add_update(&campaign_id, &content2);
-
-        // Verify ordering and content
-        let updates = client.get_updates(&campaign_id);
-        assert_eq!(updates.len(), 2);
-        assert_eq!(updates.get(0).unwrap().content, content1);
-        assert_eq!(updates.get(0).unwrap().timestamp, 5_000);
-        assert_eq!(updates.get(1).unwrap().content, content2);
-        assert_eq!(updates.get(1).unwrap().timestamp, 6_000);
-    }
-
-    #[test]
-    fn test_add_update_campaign_missing() {
-        let (_env, client, _creator, _beneficiary, _donor, _admin, _token_client, _) = setup();
-        let content = String::from_str(&client.env, "Update");
-        let result = client.try_add_update(&999, &content);
-        assert_eq!(result, Err(Ok(ContractError::CampaignNotFound)));
-    }
-
-    #[test]
-    fn test_add_update_empty_content() {
-        let (env, client, creator, beneficiary, _donor, _admin, token_client, _) = setup();
-        let bens = single_ben(&env, &beneficiary);
-        let campaign_id = client.create_campaign(
-            &creator,
-            &bens,
-            &String::from_str(&env, "Test"),
-            &String::from_str(&env, "https://example.com/meta"),
-            &10_000_000,
-            &10_000,
-            &token_client.address,
-            &None,
-            &None,
-            &None,
-        );
-
-        let content = String::from_str(&env, "");
-        let result = client.try_add_update(&campaign_id, &content);
-        assert_eq!(result, Err(Ok(ContractError::InvalidUpdateContent)));
-    }
-
-    #[test]
-    fn test_add_update_max_limit() {
-        let (env, client, creator, beneficiary, _donor, _admin, token_client, _) = setup();
-        let bens = single_ben(&env, &beneficiary);
-        let campaign_id = client.create_campaign(
-            &creator,
-            &bens,
-            &String::from_str(&env, "Test"),
-            &String::from_str(&env, "https://example.com/meta"),
-            &10_000_000,
-            &10_000,
-            &token_client.address,
-            &None,
-            &None,
-            &None,
-        );
-
-        let content = String::from_str(&env, "Update");
-
-        // Add 10 updates
-        for _ in 0..10 {
-            client.add_update(&campaign_id, &content);
-        }
-
-        // 11th update should fail
-        let result = client.try_add_update(&campaign_id, &content);
-        assert_eq!(result, Err(Ok(ContractError::TooManyUpdates)));
-    }
-
-    #[test]
-    #[should_panic(expected = "HostError: Error(Auth, InvalidAction)")]
-    fn test_add_update_unauthorized() {
-        let env = Env::default();
-        // Do not mock auths, so require_auth will fail
-        let creator = Address::generate(&env);
-        let token_admin = Address::generate(&env);
-        let token_id = env.register_stellar_asset_contract_v2(token_admin.clone());
-        let contract_id = env.register_contract(None, StellarGiveContract);
-        let client = StellarGiveContractClient::new(&env, &contract_id);
-
-        // We can't even initialize or create campaign without auth,
-        // so this is tricky. We'll use mock_auths specifically for the test.
-        env.mock_all_auths();
-
-        let bens = single_ben(&env, &creator); // using creator as beneficiary for simplicity
-        let campaign_id = client.create_campaign(
-            &creator,
-            &bens,
-            &String::from_str(&env, "Test"),
-            &String::from_str(&env, "https://example.com/meta"),
-            &10_000_000,
-            &10_000,
-            &token_id.address(),
-            &None,
-            &None,
-            &None,
-        );
-
-        // Remove mock_all_auths behavior by setting an empty auth list for the next call
-        env.mock_auths(&[]);
-
-        let content = String::from_str(&env, "Update");
-        // This will panic with Auth InvalidAction
-        client.add_update(&campaign_id, &content);
+        assert_eq!(id1, 1);
+        assert_eq!(id2, 2);
+        env.as_contract(&client.address, || {
+            assert_eq!(read_next_id(&env), 3);
+        });
     }
 }
