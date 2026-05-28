@@ -32,7 +32,8 @@ export function CampaignList() {
     return campaignList.filter(
       (campaign) =>
         campaign.title.toLowerCase().includes(term) ||
-        campaign.creator.toLowerCase().includes(term)
+        campaign.creator.toLowerCase().includes(term) ||
+        campaign.beneficiary.toLowerCase().includes(term)
     );
   }, [campaigns, debouncedSearchTerm]);
 
@@ -60,7 +61,7 @@ export function CampaignList() {
         <div>
           <h2 className="text-2xl font-semibold tracking-tight">Campaigns</h2>
           <p className="text-sm text-muted-foreground">
-            Search by campaign name or creator address.
+            Search by campaign name, creator, or beneficiary address.
           </p>
         </div>
         <div className="relative w-full sm:max-w-sm">

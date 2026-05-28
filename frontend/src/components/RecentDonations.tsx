@@ -5,6 +5,7 @@ import { fromStroops } from "@/lib/soroban";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Heart, ArrowUpRight, Activity } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
+import { AddressLink } from "@/components/AddressLink";
 
 export function RecentDonations({ campaignId }: { campaignId: bigint }) {
   const { data: allEvents, isLoading, isError } = useEvents();
@@ -54,16 +55,16 @@ export function RecentDonations({ campaignId }: { campaignId: bigint }) {
     .sort((a, b) => Number(b.ledger) - Number(a.ledger))
     .slice(0, 10);
 
-  const formatDonor = (donor: any) => {
-    if (!donor) return "Anonymous";
+  const normalizeDonorAddress = (donor: any): string | null => {
+    if (!donor) return null;
     const str = donor.toString();
     if (str === "GAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWHF") {
-      return "Anonymous";
+      return null;
     }
     if (str.length === 56 && str.startsWith("G")) {
-      return `${str.substring(0, 4)}...${str.substring(52)}`;
+      return str;
     }
-    return "Anonymous";
+    return null;
   };
 
   return (
@@ -79,7 +80,9 @@ export function RecentDonations({ campaignId }: { campaignId: bigint }) {
       <CardContent className="space-y-4">
         {donations && donations.length > 0 ? (
           <div className="space-y-4">
-            {donations.map((event: any) => (
+            {donations.map((event: any) => {
+              const donorAddress = normalizeDonorAddress(event.data[1]);
+              return (
               <div key={event.id} className="flex gap-3 items-center border-b last:border-0 pb-4 last:pb-0">
                 <div className="p-2 rounded-full bg-green-500/10 shrink-0">
                   <ArrowUpRight className="w-4 h-4 text-green-500" />
@@ -87,9 +90,11 @@ export function RecentDonations({ campaignId }: { campaignId: bigint }) {
                 <div className="flex-1 min-w-0">
                   <p className="text-sm truncate">
                     <span className="font-bold">{fromStroops(event.data[2])} XLM</span> donated by{" "}
-                    <span className="font-medium text-muted-foreground" title={event.data[1]?.toString()}>
-                      {formatDonor(event.data[1])}
-                    </span>
+                    {donorAddress ? (
+                      <AddressLink address={donorAddress} className="text-muted-foreground" />
+                    ) : (
+                      <span className="font-medium text-muted-foreground">Anonymous</span>
+                    )}
                   </p>
                   <p className="text-xs text-muted-foreground mt-0.5">
                     {event.createdAt 
@@ -98,7 +103,7 @@ export function RecentDonations({ campaignId }: { campaignId: bigint }) {
                   </p>
                 </div>
               </div>
-            ))}
+            )})}
           </div>
         ) : (
           <div className="text-center py-12 text-muted-foreground space-y-1 bg-muted/20 rounded-lg border border-dashed">
