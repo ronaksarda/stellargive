@@ -1,7 +1,7 @@
 import { Navbar } from "@/components/Navbar";
 import { CampaignList } from "@/components/CampaignList";
 import { EventFeed } from "@/components/EventFeed";
-import { Button } from "@/components/ui/button";
+import { HeroCTA } from "@/components/HeroCTA";
 import { Heart, ShieldCheck, Zap } from "lucide-react";
 
 export default function Home() {
@@ -31,11 +31,13 @@ export default function Home() {
                 <Heart className="w-4 h-4 text-primary" /> 100% Direct Impact
               </div>
             </div>
+
+            <HeroCTA />
           </div>
         </section>
 
         {/* Campaigns Section */}
-        <section className="py-16 container">
+        <section id="explore-campaigns" className="py-16 container">
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-12">
             <div className="lg:col-span-3 space-y-8">
               <div className="flex justify-between items-end">

@@ -5,7 +5,7 @@ import { ShareButton } from "@/components/ShareButton";
 import { Skeleton } from "@/components/ui/skeleton";
 import { RecentDonations } from "@/components/RecentDonations";
 import { AddressLink } from "@/components/AddressLink";
-
+import { ProjectUpdates } from "@/components/ProjectUpdates";
 import { sanitizeUrl } from "@/lib/sanitize";
 
 export function CampaignDetailsClient({ params }: { params: { id: string } }) {
@@ -54,6 +54,7 @@ export function CampaignDetailsClient({ params }: { params: { id: string } }) {
           <div className="h-64 bg-muted/20 rounded-xl border border-dashed flex items-center justify-center text-muted-foreground text-sm">
             Campaign Content Area
           </div>
+          <ProjectUpdates campaignId={BigInt(params.id)} />
         </div>
 
         <div className="lg:col-span-1">

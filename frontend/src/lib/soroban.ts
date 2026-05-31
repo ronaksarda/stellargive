@@ -47,11 +47,11 @@ export function toStroops(amount: string | number): bigint {
 }
 
 export function fromStroops(stroops: bigint | string | number): string {
-  const s = BigInt(stroops).toString().padStart(STROOP_PRECISION + 1, "0");
-  const pos = s.length - STROOP_PRECISION;
-  const intPart = s.substring(0, pos);
-  const decPart = s.substring(pos).replace(/0+$/, "");
-  return decPart.length > 0 ? `${intPart}.${decPart}` : intPart || "0";
+  const n = BigInt(stroops);
+  const intPart = (n / 10_000_000n).toString();
+  const decRaw = (n % 10_000_000n).toString().padStart(7, "0");
+  const decPart = decRaw.replace(/0+$/, "");
+  return decPart.length > 0 ? `${intPart}.${decPart}` : intPart;
 }
 
 export type CampaignStatus = "Active" | "Funded" | "Claimed" | "Expired";
@@ -237,6 +237,41 @@ export async function getEvents(limit = 20) {
       data: value,
     };
   });
+}
+
+export interface CampaignUpdate {
+  content: string;
+  timestamp: bigint;
+}
+
+export async function getUpdates(campaignId: bigint): Promise<CampaignUpdate[]> {
+  const tx = new TransactionBuilder(
+    new Account("GAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWHF", "0"),
+    {
+      fee: "100",
+      networkPassphrase: NETWORK_PASSPHRASE,
+    }
+  )
+    .addOperation(
+      Operation.invokeHostFunction({
+        func: "get_updates",
+        contractId: CONTRACT_ID,
+        args: [nativeToScVal(campaignId, { type: "u64" })],
+      } as any)
+    )
+    .setTimeout(30)
+    .build();
+
+  const sim = await server.simulateTransaction(tx);
+  if (rpc.Api.isSimulationError(sim)) {
+    throw new Error(`Simulation failed: ${sim.error}`);
+  }
+  if (!sim.result) return [];
+  const result = scValToNative(sim.result.retval);
+  return (result as any[]).map((u) => ({
+    content: u.content.toString(),
+    timestamp: BigInt(u.timestamp),
+  }));
 }
 
 export async function getSACBalance(contractId: string, userAddress: string): Promise<bigint> {

@@ -1,14 +1,41 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { useEvents } from "@/hooks/useSoroban";
 import { fromStroops } from "@/lib/soroban";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Activity, ArrowUpRight, Megaphone, Trophy } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
+import { toast } from "sonner";
 
 export function EventFeed() {
   const { data: events, isLoading } = useEvents();
+  const prevIdsRef = useRef<Set<string>>(new Set());
+  const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    if (!events?.length) return;
+
+    const newDonations = events.filter(
+      (e: any) => e.topic === "received" && !prevIdsRef.current.has(e.id)
+    );
+
+    const currentIds = new Set<string>(events.map((e: any) => e.id as string));
+
+    if (prevIdsRef.current.size > 0 && newDonations.length > 0) {
+      if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+      toastTimerRef.current = setTimeout(() => {
+        toast.info(
+          newDonations.length === 1
+            ? "New donation received!"
+            : `${newDonations.length} new donations received!`
+        );
+      }, 500);
+    }
+
+    prevIdsRef.current = currentIds;
+  }, [events]);
 
   if (isLoading) {
     return <Activity className="animate-spin mx-auto my-8 text-muted-foreground" />;

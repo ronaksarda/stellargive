@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getCampaign, getRecentCampaigns, getCampaignsPage, submitTransaction, CONTRACT_ID, toStroops, getEvents } from "@/lib/soroban";
+import { getCampaign, getRecentCampaigns, getCampaignsPage, submitTransaction, CONTRACT_ID, toStroops, getEvents, getUpdates } from "@/lib/soroban";
 import { Address, nativeToScVal } from "@stellar/stellar-sdk";
 import { useWallet } from "@/lib/WalletProvider";
 
@@ -152,6 +152,36 @@ export function useEvents(limit = 20) {
   return useQuery({
     queryKey: ["events", limit],
     queryFn: () => getEvents(limit),
-    refetchInterval: 5000,
+    refetchInterval: 10_000,
+    refetchIntervalInBackground: false,
+    refetchOnWindowFocus: true,
+  });
+}
+
+export function useGetUpdates(campaignId: bigint) {
+  return useQuery({
+    queryKey: ["updates", campaignId.toString()],
+    queryFn: () => getUpdates(campaignId),
+  });
+}
+
+export function useAddUpdate() {
+  const { address } = useWallet();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (params: { campaignId: bigint; content: string }) => {
+      if (!address) throw new Error("Wallet not connected");
+
+      const args = [
+        nativeToScVal(params.campaignId, { type: "u64" }),
+        nativeToScVal(params.content, { type: "string" }),
+      ];
+
+      return submitTransaction(address, "add_update", args);
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["updates", variables.campaignId.toString()] });
+    },
   });
 }
