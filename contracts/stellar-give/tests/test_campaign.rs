@@ -5,12 +5,13 @@
 //! deadline timestamp behaves consistently with the contract's `>` comparison.
 
 use soroban_sdk::{
-    symbol_short, testutils::Address as _, token, Address, Env, String, Vec,
+    symbol_short, String,
 };
 
 mod helpers;
 use helpers::{register_and_setup, set_timestamp, single_ben};
-use stellar_give::{CampaignStatus, ContractError, StellarGiveContract, StellarGiveContractClient};
+use stellar_give::CampaignStatus;
+use stellar_give::ContractError;
 
 /// Donating after the deadline must fail with `CampaignNotActive`.
 #[test]

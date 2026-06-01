@@ -4,7 +4,7 @@
 //! `#[cfg(test)]` module in `lib.rs`, exposed for use by external test files.
 
 use soroban_sdk::{
-    testutils::Address as _,
+    testutils::{Address as _, Ledger},
     token, Address, Env, Vec,
 };
 use stellar_give::{StellarGiveContract, StellarGiveContractClient};
