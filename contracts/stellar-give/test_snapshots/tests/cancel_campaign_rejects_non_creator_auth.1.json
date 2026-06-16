@@ -122,6 +122,9 @@
                   "string": "Creator Only"
                 },
                 {
+                  "string": "A sample campaign description."
+                },
+                {
                   "string": "https://example.com/meta"
                 },
                 {
@@ -171,6 +174,7 @@
         }
       ]
     ],
+    [],
     []
   ],
   "ledger": {
@@ -404,7 +408,7 @@
             },
             "ext": "v0"
           },
-          4095
+          518400
         ]
       ],
       [
@@ -449,7 +453,7 @@
             },
             "ext": "v0"
           },
-          4095
+          518400
         ]
       ],
       [
@@ -542,10 +546,26 @@
                     },
                     {
                       "key": {
+                        "symbol": "description"
+                      },
+                      "val": {
+                        "string": "A sample campaign description."
+                      }
+                    },
+                    {
+                      "key": {
                         "symbol": "id"
                       },
                       "val": {
                         "u64": 1
+                      }
+                    },
+                    {
+                      "key": {
+                        "symbol": "is_private"
+                      },
+                      "val": {
+                        "bool": false
                       }
                     },
                     {
@@ -612,6 +632,14 @@
                     },
                     {
                       "key": {
+                        "symbol": "was_extended"
+                      },
+                      "val": {
+                        "bool": false
+                      }
+                    },
+                    {
+                      "key": {
                         "symbol": "website"
                       },
                       "val": "void"
@@ -622,7 +650,7 @@
             },
             "ext": "v0"
           },
-          4095
+          518400
         ]
       ],
       [
@@ -662,6 +690,14 @@
                         },
                         "val": {
                           "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAITA4"
+                        }
+                      },
+                      {
+                        "key": {
+                          "symbol": "PAUSED"
+                        },
+                        "val": {
+                          "bool": false
                         }
                       }
                     ]
@@ -1447,6 +1483,9 @@
                   "string": "Creator Only"
                 },
                 {
+                  "string": "A sample campaign description."
+                },
+                {
                   "string": "https://example.com/meta"
                 },
                 {
@@ -1868,6 +1907,207 @@
                       "u64": 1
                     }
                   ]
+                }
+              ]
+            }
+          }
+        }
+      },
+      "failed_call": false
+    },
+    {
+      "event": {
+        "ext": "v0",
+        "contract_id": null,
+        "type_": "diagnostic",
+        "body": {
+          "v0": {
+            "topics": [
+              {
+                "symbol": "fn_call"
+              },
+              {
+                "bytes": "0000000000000000000000000000000000000000000000000000000000000007"
+              },
+              {
+                "symbol": "get_campaign"
+              }
+            ],
+            "data": {
+              "u64": 1
+            }
+          }
+        }
+      },
+      "failed_call": false
+    },
+    {
+      "event": {
+        "ext": "v0",
+        "contract_id": "0000000000000000000000000000000000000000000000000000000000000007",
+        "type_": "diagnostic",
+        "body": {
+          "v0": {
+            "topics": [
+              {
+                "symbol": "fn_return"
+              },
+              {
+                "symbol": "get_campaign"
+              }
+            ],
+            "data": {
+              "map": [
+                {
+                  "key": {
+                    "symbol": "accepted_token"
+                  },
+                  "val": {
+                    "address": "CACMVW2KK4H5FZDFF2AUCAKQTEJMZZWJUIZF23XMRVYQBSXYLHZ6BKWN"
+                  }
+                },
+                {
+                  "key": {
+                    "symbol": "beneficiaries"
+                  },
+                  "val": {
+                    "vec": [
+                      {
+                        "vec": [
+                          {
+                            "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFCT4"
+                          },
+                          {
+                            "u32": 10000
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                },
+                {
+                  "key": {
+                    "symbol": "category"
+                  },
+                  "val": {
+                    "symbol": "relief"
+                  }
+                },
+                {
+                  "key": {
+                    "symbol": "creator"
+                  },
+                  "val": {
+                    "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD2KM"
+                  }
+                },
+                {
+                  "key": {
+                    "symbol": "deadline"
+                  },
+                  "val": {
+                    "u64": 2000
+                  }
+                },
+                {
+                  "key": {
+                    "symbol": "description"
+                  },
+                  "val": {
+                    "string": "A sample campaign description."
+                  }
+                },
+                {
+                  "key": {
+                    "symbol": "id"
+                  },
+                  "val": {
+                    "u64": 1
+                  }
+                },
+                {
+                  "key": {
+                    "symbol": "is_private"
+                  },
+                  "val": {
+                    "bool": false
+                  }
+                },
+                {
+                  "key": {
+                    "symbol": "max_per_donor"
+                  },
+                  "val": "void"
+                },
+                {
+                  "key": {
+                    "symbol": "metadata_uri"
+                  },
+                  "val": {
+                    "string": "https://example.com/meta"
+                  }
+                },
+                {
+                  "key": {
+                    "symbol": "raised_amount"
+                  },
+                  "val": {
+                    "i128": {
+                      "hi": 0,
+                      "lo": 0
+                    }
+                  }
+                },
+                {
+                  "key": {
+                    "symbol": "status"
+                  },
+                  "val": {
+                    "vec": [
+                      {
+                        "symbol": "Active"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "key": {
+                    "symbol": "target_amount"
+                  },
+                  "val": {
+                    "i128": {
+                      "hi": 0,
+                      "lo": 10000000
+                    }
+                  }
+                },
+                {
+                  "key": {
+                    "symbol": "title"
+                  },
+                  "val": {
+                    "string": "Creator Only"
+                  }
+                },
+                {
+                  "key": {
+                    "symbol": "twitter"
+                  },
+                  "val": "void"
+                },
+                {
+                  "key": {
+                    "symbol": "was_extended"
+                  },
+                  "val": {
+                    "bool": false
+                  }
+                },
+                {
+                  "key": {
+                    "symbol": "website"
+                  },
+                  "val": "void"
                 }
               ]
             }

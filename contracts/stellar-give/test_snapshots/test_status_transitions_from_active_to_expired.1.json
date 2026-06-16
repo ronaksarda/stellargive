@@ -122,6 +122,9 @@
                   "string": "Expiry Check"
                 },
                 {
+                  "string": "A test campaign description."
+                },
+                {
                   "string": "https://example.com/meta"
                 },
                 {
@@ -406,7 +409,7 @@
             },
             "ext": "v0"
           },
-          4095
+          518400
         ]
       ],
       [
@@ -451,7 +454,7 @@
             },
             "ext": "v0"
           },
-          4095
+          518400
         ]
       ],
       [
@@ -544,6 +547,14 @@
                     },
                     {
                       "key": {
+                        "symbol": "description"
+                      },
+                      "val": {
+                        "string": "A test campaign description."
+                      }
+                    },
+                    {
+                      "key": {
                         "symbol": "id"
                       },
                       "val": {
@@ -622,6 +633,14 @@
                     },
                     {
                       "key": {
+                        "symbol": "was_extended"
+                      },
+                      "val": {
+                        "bool": false
+                      }
+                    },
+                    {
+                      "key": {
                         "symbol": "website"
                       },
                       "val": "void"
@@ -632,7 +651,7 @@
             },
             "ext": "v0"
           },
-          4095
+          518400
         ]
       ],
       [
@@ -672,6 +691,14 @@
                         },
                         "val": {
                           "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAITA4"
+                        }
+                      },
+                      {
+                        "key": {
+                          "symbol": "PAUSED"
+                        },
+                        "val": {
+                          "bool": false
                         }
                       }
                     ]
@@ -1425,6 +1452,9 @@
                   "string": "Expiry Check"
                 },
                 {
+                  "string": "A test campaign description."
+                },
+                {
                   "string": "https://example.com/meta"
                 },
                 {
@@ -1803,6 +1833,14 @@
                 },
                 {
                   "key": {
+                    "symbol": "description"
+                  },
+                  "val": {
+                    "string": "A test campaign description."
+                  }
+                },
+                {
+                  "key": {
                     "symbol": "id"
                   },
                   "val": {
@@ -1878,6 +1916,14 @@
                     "symbol": "twitter"
                   },
                   "val": "void"
+                },
+                {
+                  "key": {
+                    "symbol": "was_extended"
+                  },
+                  "val": {
+                    "bool": false
+                  }
                 },
                 {
                   "key": {
@@ -1988,6 +2034,14 @@
                 },
                 {
                   "key": {
+                    "symbol": "description"
+                  },
+                  "val": {
+                    "string": "A test campaign description."
+                  }
+                },
+                {
+                  "key": {
                     "symbol": "id"
                   },
                   "val": {
@@ -2063,6 +2117,14 @@
                     "symbol": "twitter"
                   },
                   "val": "void"
+                },
+                {
+                  "key": {
+                    "symbol": "was_extended"
+                  },
+                  "val": {
+                    "bool": false
+                  }
                 },
                 {
                   "key": {
@@ -2169,6 +2231,14 @@
                   },
                   "val": {
                     "u64": 1100
+                  }
+                },
+                {
+                  "key": {
+                    "symbol": "description"
+                  },
+                  "val": {
+                    "string": "A test campaign description."
                   }
                 },
                 {
@@ -2248,6 +2318,14 @@
                     "symbol": "twitter"
                   },
                   "val": "void"
+                },
+                {
+                  "key": {
+                    "symbol": "was_extended"
+                  },
+                  "val": {
+                    "bool": false
+                  }
                 },
                 {
                   "key": {

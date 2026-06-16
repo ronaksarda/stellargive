@@ -122,83 +122,7 @@
                   "string": "Bench"
                 },
                 {
-                  "string": "https://example.com/meta"
-                },
-                {
-                  "symbol": "relief"
-                },
-                {
-                  "i128": {
-                    "hi": 0,
-                    "lo": 10000000
-                  }
-                },
-                {
-                  "u64": 2000
-                },
-                {
-                  "address": "CACMVW2KK4H5FZDFF2AUCAKQTEJMZZWJUIZF23XMRVYQBSXYLHZ6BKWN"
-                },
-                "void"
-              ]
-            }
-          },
-          "sub_invocations": [
-            {
-              "function": {
-                "contract_fn": {
-                  "contract_address": "CACMVW2KK4H5FZDFF2AUCAKQTEJMZZWJUIZF23XMRVYQBSXYLHZ6BKWN",
-                  "function_name": "transfer",
-                  "args": [
-                    {
-                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD2KM"
-                    },
-                    {
-                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAITA4"
-                    },
-                    {
-                      "i128": {
-                        "hi": 0,
-                        "lo": 100000
-                      }
-                    }
-                  ]
-                }
-              },
-              "sub_invocations": []
-            }
-          ]
-        }
-      ]
-    ],
-    [
-      [
-        "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD2KM",
-        {
-          "function": {
-            "contract_fn": {
-              "contract_address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOLZM",
-              "function_name": "create_campaign",
-              "args": [
-                {
-                  "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD2KM"
-                },
-                {
-                  "vec": [
-                    {
-                      "vec": [
-                        {
-                          "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFCT4"
-                        },
-                        {
-                          "u32": 10000
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "string": "Bench"
+                  "string": "A sample campaign description."
                 },
                 {
                   "string": "https://example.com/meta"
@@ -280,83 +204,7 @@
                   "string": "Bench"
                 },
                 {
-                  "string": "https://example.com/meta"
-                },
-                {
-                  "symbol": "relief"
-                },
-                {
-                  "i128": {
-                    "hi": 0,
-                    "lo": 10000000
-                  }
-                },
-                {
-                  "u64": 2000
-                },
-                {
-                  "address": "CACMVW2KK4H5FZDFF2AUCAKQTEJMZZWJUIZF23XMRVYQBSXYLHZ6BKWN"
-                },
-                "void"
-              ]
-            }
-          },
-          "sub_invocations": [
-            {
-              "function": {
-                "contract_fn": {
-                  "contract_address": "CACMVW2KK4H5FZDFF2AUCAKQTEJMZZWJUIZF23XMRVYQBSXYLHZ6BKWN",
-                  "function_name": "transfer",
-                  "args": [
-                    {
-                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD2KM"
-                    },
-                    {
-                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAITA4"
-                    },
-                    {
-                      "i128": {
-                        "hi": 0,
-                        "lo": 100000
-                      }
-                    }
-                  ]
-                }
-              },
-              "sub_invocations": []
-            }
-          ]
-        }
-      ]
-    ],
-    [
-      [
-        "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD2KM",
-        {
-          "function": {
-            "contract_fn": {
-              "contract_address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOLZM",
-              "function_name": "create_campaign",
-              "args": [
-                {
-                  "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD2KM"
-                },
-                {
-                  "vec": [
-                    {
-                      "vec": [
-                        {
-                          "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFCT4"
-                        },
-                        {
-                          "u32": 10000
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "string": "Bench"
+                  "string": "A sample campaign description."
                 },
                 {
                   "string": "https://example.com/meta"
@@ -438,83 +286,7 @@
                   "string": "Bench"
                 },
                 {
-                  "string": "https://example.com/meta"
-                },
-                {
-                  "symbol": "relief"
-                },
-                {
-                  "i128": {
-                    "hi": 0,
-                    "lo": 10000000
-                  }
-                },
-                {
-                  "u64": 2000
-                },
-                {
-                  "address": "CACMVW2KK4H5FZDFF2AUCAKQTEJMZZWJUIZF23XMRVYQBSXYLHZ6BKWN"
-                },
-                "void"
-              ]
-            }
-          },
-          "sub_invocations": [
-            {
-              "function": {
-                "contract_fn": {
-                  "contract_address": "CACMVW2KK4H5FZDFF2AUCAKQTEJMZZWJUIZF23XMRVYQBSXYLHZ6BKWN",
-                  "function_name": "transfer",
-                  "args": [
-                    {
-                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD2KM"
-                    },
-                    {
-                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAITA4"
-                    },
-                    {
-                      "i128": {
-                        "hi": 0,
-                        "lo": 100000
-                      }
-                    }
-                  ]
-                }
-              },
-              "sub_invocations": []
-            }
-          ]
-        }
-      ]
-    ],
-    [
-      [
-        "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD2KM",
-        {
-          "function": {
-            "contract_fn": {
-              "contract_address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOLZM",
-              "function_name": "create_campaign",
-              "args": [
-                {
-                  "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD2KM"
-                },
-                {
-                  "vec": [
-                    {
-                      "vec": [
-                        {
-                          "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFCT4"
-                        },
-                        {
-                          "u32": 10000
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "string": "Bench"
+                  "string": "A sample campaign description."
                 },
                 {
                   "string": "https://example.com/meta"
@@ -596,83 +368,7 @@
                   "string": "Bench"
                 },
                 {
-                  "string": "https://example.com/meta"
-                },
-                {
-                  "symbol": "relief"
-                },
-                {
-                  "i128": {
-                    "hi": 0,
-                    "lo": 10000000
-                  }
-                },
-                {
-                  "u64": 2000
-                },
-                {
-                  "address": "CACMVW2KK4H5FZDFF2AUCAKQTEJMZZWJUIZF23XMRVYQBSXYLHZ6BKWN"
-                },
-                "void"
-              ]
-            }
-          },
-          "sub_invocations": [
-            {
-              "function": {
-                "contract_fn": {
-                  "contract_address": "CACMVW2KK4H5FZDFF2AUCAKQTEJMZZWJUIZF23XMRVYQBSXYLHZ6BKWN",
-                  "function_name": "transfer",
-                  "args": [
-                    {
-                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD2KM"
-                    },
-                    {
-                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAITA4"
-                    },
-                    {
-                      "i128": {
-                        "hi": 0,
-                        "lo": 100000
-                      }
-                    }
-                  ]
-                }
-              },
-              "sub_invocations": []
-            }
-          ]
-        }
-      ]
-    ],
-    [
-      [
-        "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD2KM",
-        {
-          "function": {
-            "contract_fn": {
-              "contract_address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOLZM",
-              "function_name": "create_campaign",
-              "args": [
-                {
-                  "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD2KM"
-                },
-                {
-                  "vec": [
-                    {
-                      "vec": [
-                        {
-                          "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFCT4"
-                        },
-                        {
-                          "u32": 10000
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "string": "Bench"
+                  "string": "A sample campaign description."
                 },
                 {
                   "string": "https://example.com/meta"
@@ -754,6 +450,9 @@
                   "string": "Bench"
                 },
                 {
+                  "string": "A sample campaign description."
+                },
+                {
                   "string": "https://example.com/meta"
                 },
                 {
@@ -831,6 +530,337 @@
                 },
                 {
                   "string": "Bench"
+                },
+                {
+                  "string": "A sample campaign description."
+                },
+                {
+                  "string": "https://example.com/meta"
+                },
+                {
+                  "symbol": "relief"
+                },
+                {
+                  "i128": {
+                    "hi": 0,
+                    "lo": 10000000
+                  }
+                },
+                {
+                  "u64": 2000
+                },
+                {
+                  "address": "CACMVW2KK4H5FZDFF2AUCAKQTEJMZZWJUIZF23XMRVYQBSXYLHZ6BKWN"
+                },
+                "void"
+              ]
+            }
+          },
+          "sub_invocations": [
+            {
+              "function": {
+                "contract_fn": {
+                  "contract_address": "CACMVW2KK4H5FZDFF2AUCAKQTEJMZZWJUIZF23XMRVYQBSXYLHZ6BKWN",
+                  "function_name": "transfer",
+                  "args": [
+                    {
+                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD2KM"
+                    },
+                    {
+                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAITA4"
+                    },
+                    {
+                      "i128": {
+                        "hi": 0,
+                        "lo": 100000
+                      }
+                    }
+                  ]
+                }
+              },
+              "sub_invocations": []
+            }
+          ]
+        }
+      ]
+    ],
+    [
+      [
+        "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD2KM",
+        {
+          "function": {
+            "contract_fn": {
+              "contract_address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOLZM",
+              "function_name": "create_campaign",
+              "args": [
+                {
+                  "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD2KM"
+                },
+                {
+                  "vec": [
+                    {
+                      "vec": [
+                        {
+                          "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFCT4"
+                        },
+                        {
+                          "u32": 10000
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "string": "Bench"
+                },
+                {
+                  "string": "A sample campaign description."
+                },
+                {
+                  "string": "https://example.com/meta"
+                },
+                {
+                  "symbol": "relief"
+                },
+                {
+                  "i128": {
+                    "hi": 0,
+                    "lo": 10000000
+                  }
+                },
+                {
+                  "u64": 2000
+                },
+                {
+                  "address": "CACMVW2KK4H5FZDFF2AUCAKQTEJMZZWJUIZF23XMRVYQBSXYLHZ6BKWN"
+                },
+                "void"
+              ]
+            }
+          },
+          "sub_invocations": [
+            {
+              "function": {
+                "contract_fn": {
+                  "contract_address": "CACMVW2KK4H5FZDFF2AUCAKQTEJMZZWJUIZF23XMRVYQBSXYLHZ6BKWN",
+                  "function_name": "transfer",
+                  "args": [
+                    {
+                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD2KM"
+                    },
+                    {
+                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAITA4"
+                    },
+                    {
+                      "i128": {
+                        "hi": 0,
+                        "lo": 100000
+                      }
+                    }
+                  ]
+                }
+              },
+              "sub_invocations": []
+            }
+          ]
+        }
+      ]
+    ],
+    [
+      [
+        "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD2KM",
+        {
+          "function": {
+            "contract_fn": {
+              "contract_address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOLZM",
+              "function_name": "create_campaign",
+              "args": [
+                {
+                  "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD2KM"
+                },
+                {
+                  "vec": [
+                    {
+                      "vec": [
+                        {
+                          "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFCT4"
+                        },
+                        {
+                          "u32": 10000
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "string": "Bench"
+                },
+                {
+                  "string": "A sample campaign description."
+                },
+                {
+                  "string": "https://example.com/meta"
+                },
+                {
+                  "symbol": "relief"
+                },
+                {
+                  "i128": {
+                    "hi": 0,
+                    "lo": 10000000
+                  }
+                },
+                {
+                  "u64": 2000
+                },
+                {
+                  "address": "CACMVW2KK4H5FZDFF2AUCAKQTEJMZZWJUIZF23XMRVYQBSXYLHZ6BKWN"
+                },
+                "void"
+              ]
+            }
+          },
+          "sub_invocations": [
+            {
+              "function": {
+                "contract_fn": {
+                  "contract_address": "CACMVW2KK4H5FZDFF2AUCAKQTEJMZZWJUIZF23XMRVYQBSXYLHZ6BKWN",
+                  "function_name": "transfer",
+                  "args": [
+                    {
+                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD2KM"
+                    },
+                    {
+                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAITA4"
+                    },
+                    {
+                      "i128": {
+                        "hi": 0,
+                        "lo": 100000
+                      }
+                    }
+                  ]
+                }
+              },
+              "sub_invocations": []
+            }
+          ]
+        }
+      ]
+    ],
+    [
+      [
+        "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD2KM",
+        {
+          "function": {
+            "contract_fn": {
+              "contract_address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOLZM",
+              "function_name": "create_campaign",
+              "args": [
+                {
+                  "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD2KM"
+                },
+                {
+                  "vec": [
+                    {
+                      "vec": [
+                        {
+                          "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFCT4"
+                        },
+                        {
+                          "u32": 10000
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "string": "Bench"
+                },
+                {
+                  "string": "A sample campaign description."
+                },
+                {
+                  "string": "https://example.com/meta"
+                },
+                {
+                  "symbol": "relief"
+                },
+                {
+                  "i128": {
+                    "hi": 0,
+                    "lo": 10000000
+                  }
+                },
+                {
+                  "u64": 2000
+                },
+                {
+                  "address": "CACMVW2KK4H5FZDFF2AUCAKQTEJMZZWJUIZF23XMRVYQBSXYLHZ6BKWN"
+                },
+                "void"
+              ]
+            }
+          },
+          "sub_invocations": [
+            {
+              "function": {
+                "contract_fn": {
+                  "contract_address": "CACMVW2KK4H5FZDFF2AUCAKQTEJMZZWJUIZF23XMRVYQBSXYLHZ6BKWN",
+                  "function_name": "transfer",
+                  "args": [
+                    {
+                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD2KM"
+                    },
+                    {
+                      "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAITA4"
+                    },
+                    {
+                      "i128": {
+                        "hi": 0,
+                        "lo": 100000
+                      }
+                    }
+                  ]
+                }
+              },
+              "sub_invocations": []
+            }
+          ]
+        }
+      ]
+    ],
+    [
+      [
+        "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD2KM",
+        {
+          "function": {
+            "contract_fn": {
+              "contract_address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOLZM",
+              "function_name": "create_campaign",
+              "args": [
+                {
+                  "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD2KM"
+                },
+                {
+                  "vec": [
+                    {
+                      "vec": [
+                        {
+                          "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFCT4"
+                        },
+                        {
+                          "u32": 10000
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "string": "Bench"
+                },
+                {
+                  "string": "A sample campaign description."
                 },
                 {
                   "string": "https://example.com/meta"
@@ -1411,7 +1441,7 @@
             },
             "ext": "v0"
           },
-          4095
+          518400
         ]
       ],
       [
@@ -1456,7 +1486,7 @@
             },
             "ext": "v0"
           },
-          4095
+          518400
         ]
       ],
       [
@@ -1549,10 +1579,26 @@
                     },
                     {
                       "key": {
+                        "symbol": "description"
+                      },
+                      "val": {
+                        "string": "A sample campaign description."
+                      }
+                    },
+                    {
+                      "key": {
                         "symbol": "id"
                       },
                       "val": {
                         "u64": 1
+                      }
+                    },
+                    {
+                      "key": {
+                        "symbol": "is_private"
+                      },
+                      "val": {
+                        "bool": false
                       }
                     },
                     {
@@ -1619,6 +1665,14 @@
                     },
                     {
                       "key": {
+                        "symbol": "was_extended"
+                      },
+                      "val": {
+                        "bool": false
+                      }
+                    },
+                    {
+                      "key": {
                         "symbol": "website"
                       },
                       "val": "void"
@@ -1629,7 +1683,7 @@
             },
             "ext": "v0"
           },
-          4095
+          518400
         ]
       ],
       [
@@ -1722,10 +1776,26 @@
                     },
                     {
                       "key": {
+                        "symbol": "description"
+                      },
+                      "val": {
+                        "string": "A sample campaign description."
+                      }
+                    },
+                    {
+                      "key": {
                         "symbol": "id"
                       },
                       "val": {
                         "u64": 2
+                      }
+                    },
+                    {
+                      "key": {
+                        "symbol": "is_private"
+                      },
+                      "val": {
+                        "bool": false
                       }
                     },
                     {
@@ -1792,6 +1862,14 @@
                     },
                     {
                       "key": {
+                        "symbol": "was_extended"
+                      },
+                      "val": {
+                        "bool": false
+                      }
+                    },
+                    {
+                      "key": {
                         "symbol": "website"
                       },
                       "val": "void"
@@ -1802,7 +1880,7 @@
             },
             "ext": "v0"
           },
-          4095
+          518400
         ]
       ],
       [
@@ -1895,10 +1973,26 @@
                     },
                     {
                       "key": {
+                        "symbol": "description"
+                      },
+                      "val": {
+                        "string": "A sample campaign description."
+                      }
+                    },
+                    {
+                      "key": {
                         "symbol": "id"
                       },
                       "val": {
                         "u64": 3
+                      }
+                    },
+                    {
+                      "key": {
+                        "symbol": "is_private"
+                      },
+                      "val": {
+                        "bool": false
                       }
                     },
                     {
@@ -1965,6 +2059,14 @@
                     },
                     {
                       "key": {
+                        "symbol": "was_extended"
+                      },
+                      "val": {
+                        "bool": false
+                      }
+                    },
+                    {
+                      "key": {
                         "symbol": "website"
                       },
                       "val": "void"
@@ -1975,7 +2077,7 @@
             },
             "ext": "v0"
           },
-          4095
+          518400
         ]
       ],
       [
@@ -2068,10 +2170,26 @@
                     },
                     {
                       "key": {
+                        "symbol": "description"
+                      },
+                      "val": {
+                        "string": "A sample campaign description."
+                      }
+                    },
+                    {
+                      "key": {
                         "symbol": "id"
                       },
                       "val": {
                         "u64": 4
+                      }
+                    },
+                    {
+                      "key": {
+                        "symbol": "is_private"
+                      },
+                      "val": {
+                        "bool": false
                       }
                     },
                     {
@@ -2138,6 +2256,14 @@
                     },
                     {
                       "key": {
+                        "symbol": "was_extended"
+                      },
+                      "val": {
+                        "bool": false
+                      }
+                    },
+                    {
+                      "key": {
                         "symbol": "website"
                       },
                       "val": "void"
@@ -2148,7 +2274,7 @@
             },
             "ext": "v0"
           },
-          4095
+          518400
         ]
       ],
       [
@@ -2241,10 +2367,26 @@
                     },
                     {
                       "key": {
+                        "symbol": "description"
+                      },
+                      "val": {
+                        "string": "A sample campaign description."
+                      }
+                    },
+                    {
+                      "key": {
                         "symbol": "id"
                       },
                       "val": {
                         "u64": 5
+                      }
+                    },
+                    {
+                      "key": {
+                        "symbol": "is_private"
+                      },
+                      "val": {
+                        "bool": false
                       }
                     },
                     {
@@ -2311,6 +2453,14 @@
                     },
                     {
                       "key": {
+                        "symbol": "was_extended"
+                      },
+                      "val": {
+                        "bool": false
+                      }
+                    },
+                    {
+                      "key": {
                         "symbol": "website"
                       },
                       "val": "void"
@@ -2321,7 +2471,7 @@
             },
             "ext": "v0"
           },
-          4095
+          518400
         ]
       ],
       [
@@ -2414,10 +2564,26 @@
                     },
                     {
                       "key": {
+                        "symbol": "description"
+                      },
+                      "val": {
+                        "string": "A sample campaign description."
+                      }
+                    },
+                    {
+                      "key": {
                         "symbol": "id"
                       },
                       "val": {
                         "u64": 6
+                      }
+                    },
+                    {
+                      "key": {
+                        "symbol": "is_private"
+                      },
+                      "val": {
+                        "bool": false
                       }
                     },
                     {
@@ -2484,6 +2650,14 @@
                     },
                     {
                       "key": {
+                        "symbol": "was_extended"
+                      },
+                      "val": {
+                        "bool": false
+                      }
+                    },
+                    {
+                      "key": {
                         "symbol": "website"
                       },
                       "val": "void"
@@ -2494,7 +2668,7 @@
             },
             "ext": "v0"
           },
-          4095
+          518400
         ]
       ],
       [
@@ -2587,10 +2761,26 @@
                     },
                     {
                       "key": {
+                        "symbol": "description"
+                      },
+                      "val": {
+                        "string": "A sample campaign description."
+                      }
+                    },
+                    {
+                      "key": {
                         "symbol": "id"
                       },
                       "val": {
                         "u64": 7
+                      }
+                    },
+                    {
+                      "key": {
+                        "symbol": "is_private"
+                      },
+                      "val": {
+                        "bool": false
                       }
                     },
                     {
@@ -2657,6 +2847,14 @@
                     },
                     {
                       "key": {
+                        "symbol": "was_extended"
+                      },
+                      "val": {
+                        "bool": false
+                      }
+                    },
+                    {
+                      "key": {
                         "symbol": "website"
                       },
                       "val": "void"
@@ -2667,7 +2865,7 @@
             },
             "ext": "v0"
           },
-          4095
+          518400
         ]
       ],
       [
@@ -2760,10 +2958,26 @@
                     },
                     {
                       "key": {
+                        "symbol": "description"
+                      },
+                      "val": {
+                        "string": "A sample campaign description."
+                      }
+                    },
+                    {
+                      "key": {
                         "symbol": "id"
                       },
                       "val": {
                         "u64": 8
+                      }
+                    },
+                    {
+                      "key": {
+                        "symbol": "is_private"
+                      },
+                      "val": {
+                        "bool": false
                       }
                     },
                     {
@@ -2830,6 +3044,14 @@
                     },
                     {
                       "key": {
+                        "symbol": "was_extended"
+                      },
+                      "val": {
+                        "bool": false
+                      }
+                    },
+                    {
+                      "key": {
                         "symbol": "website"
                       },
                       "val": "void"
@@ -2840,7 +3062,7 @@
             },
             "ext": "v0"
           },
-          4095
+          518400
         ]
       ],
       [
@@ -2933,10 +3155,26 @@
                     },
                     {
                       "key": {
+                        "symbol": "description"
+                      },
+                      "val": {
+                        "string": "A sample campaign description."
+                      }
+                    },
+                    {
+                      "key": {
                         "symbol": "id"
                       },
                       "val": {
                         "u64": 9
+                      }
+                    },
+                    {
+                      "key": {
+                        "symbol": "is_private"
+                      },
+                      "val": {
+                        "bool": false
                       }
                     },
                     {
@@ -3003,6 +3241,14 @@
                     },
                     {
                       "key": {
+                        "symbol": "was_extended"
+                      },
+                      "val": {
+                        "bool": false
+                      }
+                    },
+                    {
+                      "key": {
                         "symbol": "website"
                       },
                       "val": "void"
@@ -3013,7 +3259,7 @@
             },
             "ext": "v0"
           },
-          4095
+          518400
         ]
       ],
       [
@@ -3106,10 +3352,26 @@
                     },
                     {
                       "key": {
+                        "symbol": "description"
+                      },
+                      "val": {
+                        "string": "A sample campaign description."
+                      }
+                    },
+                    {
+                      "key": {
                         "symbol": "id"
                       },
                       "val": {
                         "u64": 10
+                      }
+                    },
+                    {
+                      "key": {
+                        "symbol": "is_private"
+                      },
+                      "val": {
+                        "bool": false
                       }
                     },
                     {
@@ -3176,6 +3438,14 @@
                     },
                     {
                       "key": {
+                        "symbol": "was_extended"
+                      },
+                      "val": {
+                        "bool": false
+                      }
+                    },
+                    {
+                      "key": {
                         "symbol": "website"
                       },
                       "val": "void"
@@ -3186,7 +3456,7 @@
             },
             "ext": "v0"
           },
-          4095
+          518400
         ]
       ],
       [
@@ -3226,6 +3496,14 @@
                         },
                         "val": {
                           "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAITA4"
+                        }
+                      },
+                      {
+                        "key": {
+                          "symbol": "PAUSED"
+                        },
+                        "val": {
+                          "bool": false
                         }
                       }
                     ]
@@ -3979,6 +4257,9 @@
                   "string": "Bench"
                 },
                 {
+                  "string": "A sample campaign description."
+                },
+                {
                   "string": "https://example.com/meta"
                 },
                 {
@@ -4300,6 +4581,9 @@
                 },
                 {
                   "string": "Bench"
+                },
+                {
+                  "string": "A sample campaign description."
                 },
                 {
                   "string": "https://example.com/meta"
@@ -4625,6 +4909,9 @@
                   "string": "Bench"
                 },
                 {
+                  "string": "A sample campaign description."
+                },
+                {
                   "string": "https://example.com/meta"
                 },
                 {
@@ -4946,6 +5233,9 @@
                 },
                 {
                   "string": "Bench"
+                },
+                {
+                  "string": "A sample campaign description."
                 },
                 {
                   "string": "https://example.com/meta"
@@ -5271,6 +5561,9 @@
                   "string": "Bench"
                 },
                 {
+                  "string": "A sample campaign description."
+                },
+                {
                   "string": "https://example.com/meta"
                 },
                 {
@@ -5592,6 +5885,9 @@
                 },
                 {
                   "string": "Bench"
+                },
+                {
+                  "string": "A sample campaign description."
                 },
                 {
                   "string": "https://example.com/meta"
@@ -5917,6 +6213,9 @@
                   "string": "Bench"
                 },
                 {
+                  "string": "A sample campaign description."
+                },
+                {
                   "string": "https://example.com/meta"
                 },
                 {
@@ -6238,6 +6537,9 @@
                 },
                 {
                   "string": "Bench"
+                },
+                {
+                  "string": "A sample campaign description."
                 },
                 {
                   "string": "https://example.com/meta"
@@ -6563,6 +6865,9 @@
                   "string": "Bench"
                 },
                 {
+                  "string": "A sample campaign description."
+                },
+                {
                   "string": "https://example.com/meta"
                 },
                 {
@@ -6884,6 +7189,9 @@
                 },
                 {
                   "string": "Bench"
+                },
+                {
+                  "string": "A sample campaign description."
                 },
                 {
                   "string": "https://example.com/meta"

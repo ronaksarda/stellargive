@@ -122,6 +122,9 @@
                   "string": "\\xf0\\x9f\\x8e\\x89 Campaign \\xf0\\x9f\\x9a\\x80"
                 },
                 {
+                  "string": "A test campaign description."
+                },
+                {
                   "string": "https://example.com/meta"
                 },
                 {
@@ -199,6 +202,9 @@
                 },
                 {
                   "string": "\\xd9\\x85\\xd9\\x87\\xd9\\x85\\xd8\\xa9 \\xd8\\xa5\\xd8\\xba\\xd8\\xa7\\xd8\\xab\\xd8\\xa9"
+                },
+                {
+                  "string": "A test campaign description."
                 },
                 {
                   "string": "https://example.com/meta"
@@ -280,6 +286,9 @@
                   "string": "Camp\\xe2\\x80\\x8baign"
                 },
                 {
+                  "string": "A test campaign description."
+                },
+                {
                   "string": "https://example.com/meta"
                 },
                 {
@@ -357,6 +366,9 @@
                 },
                 {
                   "string": "\\xe6\\xb1\\x89\\xe8\\xaf\\xad Campaign"
+                },
+                {
+                  "string": "A test campaign description."
                 },
                 {
                   "string": "https://example.com/meta"
@@ -739,7 +751,7 @@
             },
             "ext": "v0"
           },
-          4095
+          518400
         ]
       ],
       [
@@ -784,7 +796,7 @@
             },
             "ext": "v0"
           },
-          4095
+          518400
         ]
       ],
       [
@@ -877,6 +889,14 @@
                     },
                     {
                       "key": {
+                        "symbol": "description"
+                      },
+                      "val": {
+                        "string": "A test campaign description."
+                      }
+                    },
+                    {
+                      "key": {
                         "symbol": "id"
                       },
                       "val": {
@@ -955,6 +975,14 @@
                     },
                     {
                       "key": {
+                        "symbol": "was_extended"
+                      },
+                      "val": {
+                        "bool": false
+                      }
+                    },
+                    {
+                      "key": {
                         "symbol": "website"
                       },
                       "val": "void"
@@ -965,7 +993,7 @@
             },
             "ext": "v0"
           },
-          4095
+          518400
         ]
       ],
       [
@@ -1058,6 +1086,14 @@
                     },
                     {
                       "key": {
+                        "symbol": "description"
+                      },
+                      "val": {
+                        "string": "A test campaign description."
+                      }
+                    },
+                    {
+                      "key": {
                         "symbol": "id"
                       },
                       "val": {
@@ -1136,6 +1172,14 @@
                     },
                     {
                       "key": {
+                        "symbol": "was_extended"
+                      },
+                      "val": {
+                        "bool": false
+                      }
+                    },
+                    {
+                      "key": {
                         "symbol": "website"
                       },
                       "val": "void"
@@ -1146,7 +1190,7 @@
             },
             "ext": "v0"
           },
-          4095
+          518400
         ]
       ],
       [
@@ -1239,6 +1283,14 @@
                     },
                     {
                       "key": {
+                        "symbol": "description"
+                      },
+                      "val": {
+                        "string": "A test campaign description."
+                      }
+                    },
+                    {
+                      "key": {
                         "symbol": "id"
                       },
                       "val": {
@@ -1317,6 +1369,14 @@
                     },
                     {
                       "key": {
+                        "symbol": "was_extended"
+                      },
+                      "val": {
+                        "bool": false
+                      }
+                    },
+                    {
+                      "key": {
                         "symbol": "website"
                       },
                       "val": "void"
@@ -1327,7 +1387,7 @@
             },
             "ext": "v0"
           },
-          4095
+          518400
         ]
       ],
       [
@@ -1420,6 +1480,14 @@
                     },
                     {
                       "key": {
+                        "symbol": "description"
+                      },
+                      "val": {
+                        "string": "A test campaign description."
+                      }
+                    },
+                    {
+                      "key": {
                         "symbol": "id"
                       },
                       "val": {
@@ -1498,6 +1566,14 @@
                     },
                     {
                       "key": {
+                        "symbol": "was_extended"
+                      },
+                      "val": {
+                        "bool": false
+                      }
+                    },
+                    {
+                      "key": {
                         "symbol": "website"
                       },
                       "val": "void"
@@ -1508,7 +1584,7 @@
             },
             "ext": "v0"
           },
-          4095
+          518400
         ]
       ],
       [
@@ -1548,6 +1624,14 @@
                         },
                         "val": {
                           "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAITA4"
+                        }
+                      },
+                      {
+                        "key": {
+                          "symbol": "PAUSED"
+                        },
+                        "val": {
+                          "bool": false
                         }
                       }
                     ]
@@ -2301,6 +2385,9 @@
                   "string": "\\xf0\\x9f\\x8e\\x89 Campaign \\xf0\\x9f\\x9a\\x80"
                 },
                 {
+                  "string": "A test campaign description."
+                },
+                {
                   "string": "https://example.com/meta"
                 },
                 {
@@ -2622,6 +2709,9 @@
                 },
                 {
                   "string": "\\xd9\\x85\\xd9\\x87\\xd9\\x85\\xd8\\xa9 \\xd8\\xa5\\xd8\\xba\\xd8\\xa7\\xd8\\xab\\xd8\\xa9"
+                },
+                {
+                  "string": "A test campaign description."
                 },
                 {
                   "string": "https://example.com/meta"
@@ -2947,6 +3037,9 @@
                   "string": "Camp\\xe2\\x80\\x8baign"
                 },
                 {
+                  "string": "A test campaign description."
+                },
+                {
                   "string": "https://example.com/meta"
                 },
                 {
@@ -3268,6 +3361,9 @@
                 },
                 {
                   "string": "\\xe6\\xb1\\x89\\xe8\\xaf\\xad Campaign"
+                },
+                {
+                  "string": "A test campaign description."
                 },
                 {
                   "string": "https://example.com/meta"

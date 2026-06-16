@@ -122,6 +122,9 @@
                   "string": "TTL Test"
                 },
                 {
+                  "string": "A test campaign description."
+                },
+                {
                   "string": "https://example.com/meta"
                 },
                 {
@@ -544,6 +547,14 @@
                     },
                     {
                       "key": {
+                        "symbol": "description"
+                      },
+                      "val": {
+                        "string": "A test campaign description."
+                      }
+                    },
+                    {
+                      "key": {
                         "symbol": "id"
                       },
                       "val": {
@@ -622,6 +633,14 @@
                     },
                     {
                       "key": {
+                        "symbol": "was_extended"
+                      },
+                      "val": {
+                        "bool": false
+                      }
+                    },
+                    {
+                      "key": {
                         "symbol": "website"
                       },
                       "val": "void"
@@ -672,6 +691,14 @@
                         },
                         "val": {
                           "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAITA4"
+                        }
+                      },
+                      {
+                        "key": {
+                          "symbol": "PAUSED"
+                        },
+                        "val": {
+                          "bool": false
                         }
                       }
                     ]
@@ -1425,6 +1452,9 @@
                   "string": "TTL Test"
                 },
                 {
+                  "string": "A test campaign description."
+                },
+                {
                   "string": "https://example.com/meta"
                 },
                 {
@@ -1803,6 +1833,14 @@
                 },
                 {
                   "key": {
+                    "symbol": "description"
+                  },
+                  "val": {
+                    "string": "A test campaign description."
+                  }
+                },
+                {
+                  "key": {
                     "symbol": "id"
                   },
                   "val": {
@@ -1878,6 +1916,14 @@
                     "symbol": "twitter"
                   },
                   "val": "void"
+                },
+                {
+                  "key": {
+                    "symbol": "was_extended"
+                  },
+                  "val": {
+                    "bool": false
+                  }
                 },
                 {
                   "key": {
