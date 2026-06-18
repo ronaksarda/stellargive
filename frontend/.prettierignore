@@ -1,0 +1,12 @@
+# Build output / generated
+.next/
+out/
+build/
+dist/
+coverage/
+
+# Dependencies
+node_modules/
+
+# Generated lockfile
+package-lock.json
